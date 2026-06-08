@@ -6,37 +6,37 @@ gsap.registerPlugin(ScrollTrigger)
 
 const CASES = [
   {
-    company: 'E-Commerce Global',
-    metric: '+280%',
-    metricLabel: 'Tasa de conversión',
-    description: 'Reescritura completa y reducción radical de LCP, disparando las ventas móviles en el primer trimestre de forma simultánea en 8 regiones.',
+    company: 'Arturo - Contador',
+    metric: 'SAT',
+    metricLabel: 'Declaraciones',
+    description: 'Calcula tus impuestos, optimiza tus deducciones y evita multas. Dile adiós a las pesadillas fiscales.',
     bg: 'bg-slate-950',
     text: 'text-white',
     descText: 'text-slate-200'
   },
   {
-    company: 'SaaS B2B',
-    metric: '98/100',
-    metricLabel: 'PageSpeed Mobile',
-    description: 'Nuestra IA actuó sobre múltiples ramas del código para alcanzar métricas perfectas en auditoría técnica sin comprometer el diseño visual.',
+    company: 'Elena - Inversiones',
+    metric: 'Cetes',
+    metricLabel: 'Portafolios estables',
+    description: 'Gánale a la inflación con estrategias de bajo riesgo diseñadas a tu medida para hacer crecer tu dinero seguro.',
     bg: 'bg-indigo-600',
     text: 'text-white',
     descText: 'text-slate-200'
   },
   {
-    company: 'Fintech Capital',
-    metric: '-71%',
-    metricLabel: 'Costo por adquisición',
-    description: 'Diseño conductual táctico que abraza al usuario, guiando su atención sin fricción hacia la meta como un flujo orgánico.',
+    company: 'Diego - Viajes',
+    metric: 'Viajes',
+    metricLabel: 'Gestión y viáticos',
+    description: 'Organiza itinerarios de trabajo, vuelos, hoteles y viáticos de manera automática y sin estrés.',
     bg: 'bg-slate-100',
     text: 'text-slate-950',
     descText: 'text-slate-800'
   },
   {
-    company: 'Real Estate Elite',
-    metric: '5.6x',
-    metricLabel: 'Volumen de leads',
-    description: 'Jerarquía visual expansiva y conexiones profundas con sistemas CRM, multiplicando la retención y la red de prospectos.',
+    company: 'Portal de Creadores',
+    metric: 'Comunidad',
+    metricLabel: 'Crea tu Asistente',
+    description: '¿No encuentras lo que buscas? Registra y entrena a tu propio experto para compartirlo con la red de inteligencia de Nex2u.',
     bg: 'bg-slate-200',
     text: 'text-slate-900',
     descText: 'text-slate-800'
@@ -66,7 +66,7 @@ export default function Cases() {
     <section id="casos" ref={comp} className="relative px-6 py-32 md:py-48 bg-white">
       <div className="w-full max-w-7xl mx-auto">
         <h2 className="cases-title text-[clamp(3rem,5vw,5.5rem)] font-black text-slate-950 leading-[0.9] tracking-tighter mb-8 w-full max-w-5xl">
-          Nuestros brazos en acción: Resultados medibles e irrefutables.
+          Conoce a tu nuevo equipo de trabajo inteligente.
         </h2>
 
         <div className="cases-grid grid grid-cols-1 md:grid-cols-12 gap-6 grid-flow-dense">

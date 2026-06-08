@@ -5,10 +5,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 const STATS = [
-  { value: 1,   suffix: '.2s',  label: 'tiempo de carga promedio', prefix: '' },
-  { value: 48,  suffix: '%',    label: 'incremento en conversión', prefix: '+' },
-  { value: 100, suffix: '/100', label: 'pagespeed móvil alcanzado', prefix: '' },
-  { value: 0,   suffix: '',     label: 'costo del diagnóstico', prefix: '$' },
+  { value: 24,  suffix: '/7',   label: 'disponibilidad de expertos', prefix: '' },
+  { value: 6,   suffix: '',     label: 'áreas de especialidad', prefix: '+' },
+  { value: 100, suffix: '%',    label: 'privacidad garantizada', prefix: '' },
+  { value: 200, suffix: ' MXN', label: 'suscripción plana mensual', prefix: '$' },
 ]
 
 function Counter({ target, prefix, suffix, trigger }) {

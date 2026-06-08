@@ -42,13 +42,13 @@ export default function Footer() {
                 <span className="text-gradient">Sin costo.</span>
               </h2>
               <p className="text-slate-700 leading-relaxed mb-6 font-semibold text-sm max-w-sm">
-                Analizamos tu web o definimos juntos la ideal para tu negocio. Sin rodeos.
+                Inicia con Nex2u. Crea tu cuenta, selecciona tus asistentes y delega la fricción de inmediato.
               </p>
               <ul className="space-y-2.5 text-xs text-slate-700 font-bold">
                 {[
-                  'Análisis de velocidad LCP y Core Web Vitals',
-                  'Estrategia de diseño y conversión (CRO)',
-                  'Reporte SEO de tus competidores gratis',
+                  'Acceso a todos los asistentes premium',
+                  'Respuestas inmediatas a cualquier duda',
+                  'Cancela tu plan en cualquier momento',
                 ].map(item => (
                   <li key={item} className="flex items-start gap-2.5">
                     <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center bg-indigo-50 border border-indigo-200">
@@ -71,17 +71,17 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
           <div className="col-span-2">
             <span className="font-display font-extrabold text-[21px] tracking-[-0.03em] text-slate-900 leading-none select-none block mb-5">
-              impuls<span className="text-gradient">AI</span>
+              Nex<span className="text-gradient">2u</span>
             </span>
             <p className="text-xs font-bold text-slate-600 leading-relaxed max-w-xs">
-              Desarrollo web y optimización de alto rendimiento con IA.
+              Hub de asistentes personales impulsado por inteligencia artificial comunitaria.
             </p>
-            <a href="mailto:hello@impulsai.mx" className="mt-4 block text-xs text-plasma hover:text-indigo-700 transition-colors font-mono font-bold">
-              hello@impulsai.mx
+            <a href="mailto:hello@nex2u.ai" className="mt-4 block text-xs text-plasma hover:text-indigo-700 transition-colors font-mono font-bold">
+              hello@nex2u.ai
             </a>
           </div>
           {[
-            { title: 'Servicios', links: ['Web desde cero', 'Optimización', 'SEO Técnico'] },
+            { title: 'Plataforma', links: ['Asistentes', 'Portal Creadores', 'Planes'] },
             { title: 'Legal', links: ['Privacidad', 'Términos'] },
           ].map(col => (
             <div key={col.title}>
@@ -100,9 +100,9 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-slate-200">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500" style={{ boxShadow: '0 0 8px #10b981' }} />
-            <span className="text-xs font-mono font-extrabold text-slate-600">Sitios optimizados activamente</span>
+            <span className="text-xs font-mono font-extrabold text-slate-600">Asistentes en línea 24/7</span>
           </div>
-          <p className="text-xs font-mono font-extrabold text-slate-500">© 2025 impulsAI · Latinoamérica</p>
+          <p className="text-xs font-mono font-extrabold text-slate-500">Hecho con amor para Sergio</p>
         </div>
 
       </div>

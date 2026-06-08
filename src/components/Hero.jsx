@@ -41,20 +41,20 @@ export default function Hero() {
       <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-start">
         <h1 className="font-black tracking-tighter leading-[0.95] text-[clamp(3.5rem,8vw,8rem)] mb-10 w-full">
           <div className="overflow-hidden pb-4">
-            <div ref={title1Ref} className="text-white drop-shadow-2xl">Desarrollo impecable.</div>
+            <div ref={title1Ref} className="text-white drop-shadow-2xl">Expertos a tu lado.</div>
           </div>
           <div className="overflow-hidden pb-4">
-            <div ref={title2Ref} className="text-indigo-300">Conversión implacable.</div>
+            <div ref={title2Ref} className="text-indigo-300">A una fracción del costo.</div>
           </div>
         </h1>
         
         <p ref={subRef} className="max-w-2xl text-[clamp(1.125rem,2vw,1.5rem)] text-slate-200 leading-relaxed font-medium mb-12">
-          Arquitectura de alto rendimiento para marcas que exigen dominio digital. Orquestamos simultáneamente velocidad extrema, diseño sofisticado y conversiones comprobadas.
+          Nex2u es tu Hub de asistentes personales premium impulsado por inteligencia artificial. Delega tareas de finanzas, salud y productividad a un equipo experto disponible 24/7.
         </p>
 
         <div ref={ctaRef}>
-          <a href="#diagnostico" className="inline-flex items-center justify-center bg-white text-slate-950 px-12 py-6 rounded-full text-lg font-bold hover:bg-indigo-400 hover:text-white transition-colors duration-500">
-            Iniciar auditoría
+          <a href="#servicios" className="inline-flex items-center justify-center bg-white text-slate-950 px-12 py-6 rounded-full text-lg font-bold hover:bg-indigo-400 hover:text-white transition-colors duration-500">
+            Explorar asistentes
           </a>
         </div>
       </div>

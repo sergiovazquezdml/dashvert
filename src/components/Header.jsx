@@ -10,7 +10,7 @@ const NAV = [
 
 function Logo() {
   return (
-    <a href="/" aria-label="impulsAI" className="flex items-center gap-3 shrink-0 group">
+    <a href="/" aria-label="Nex2u" className="flex items-center gap-3 shrink-0 group">
       {/* Icon mark */}
       <div
         className="w-10 h-10 rounded-[12px] flex items-center justify-center flex-shrink-0 transition-transform duration-350 group-hover:scale-95 shadow-sm"
@@ -23,7 +23,7 @@ function Logo() {
       </div>
       {/* Wordmark */}
       <span className="font-display font-black text-[22px] tracking-[-0.03em] text-slate-900 leading-none select-none">
-        impuls<span className="text-gradient font-black">AI</span>
+        Nex<span className="text-gradient font-black">2u</span>
       </span>
     </a>
   )

@@ -5,10 +5,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 const PARADIGMS = [
-  { title: "Semanas, no meses", text: "Destruimos los ciclos de desarrollo interminables. Lanzamos plataformas optimizadas con precisión en tiempo récord." },
-  { title: "Decisiones con datos", text: "La estética sin conversión es inútil. Analizamos cada iteración basándonos en interacción real y comportamiento del usuario." },
-  { title: "Desempeño móvil absoluto", text: "Tratar el móvil como un extra es un error fatal. Construimos primariamente para dispositivos móviles con tiempos de carga milimétricos." },
-  { title: "Dominio semántico", text: "Más allá del SEO básico. Creamos estructuras que las inteligencias artificiales comprenden e indexan prioritariamente." }
+  { title: "Comunidad de Creadores", text: "Cualquiera puede entrenar un asistente. Comparte tu conocimiento y crea agentes expertos para resolver problemas reales del día a día." },
+  { title: "Privacidad por Diseño", text: "Tus datos y consultas son tuyos. Aplicamos protocolos estrictos para que tu información financiera y de salud esté siempre protegida." },
+  { title: "Disponibilidad 24/7", text: "Olvídate de esperar citas o pagar consultas costosas para dudas rápidas. Tu equipo de expertos no duerme, tú sí." },
+  { title: "Calidad Premium", text: "No somos otro chatbot genérico. Cada agente tiene un perfil psicológico, personalidad y área de expertise finamente ajustada." }
 ]
 
 export default function Philosophy() {
@@ -62,10 +62,10 @@ export default function Philosophy() {
         <div className="w-full md:w-1/2 relative h-full">
           <div ref={leftCol} className="md:h-screen flex flex-col justify-center">
             <h2 className="philosophy-title text-[clamp(3.5rem,6vw,6rem)] font-black text-slate-950 leading-[0.9] tracking-tighter mb-4 max-w-5xl">
-              Inteligencia fluida y adaptación constante.
+              Inteligencia humana, escalada con IA.
             </h2>
             <p className="philosophy-desc text-xl text-slate-900 font-medium max-w-md">
-              Como un cerebro central con múltiples brazos tácticos, abandonamos las estructuras rígidas para implementar un ecosistema digital dinámico que responde al mercado en tiempo real.
+              Reimaginamos cómo interactúas con la tecnología. Nex2u no es una herramienta, es tu comité de asesores personales para navegar la vida moderna.
             </p>
           </div>
         </div>

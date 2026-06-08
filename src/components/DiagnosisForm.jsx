@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 
 const INTERESTS = [
-  'Velocidad y Core Web Vitals',
-  'Rediseño Estético y UX',
-  'SEO Técnico y Posicionamiento',
-  'Conversión (CRO) y Redacción',
-  'Auditoría y Diagnóstico General',
+  'Finanzas e Impuestos',
+  'Salud y Nutrición',
+  'Legal y Seguros',
+  'Viajes y Productividad',
+  'Crear mi propio asistente',
 ]
 
 const FORMSPREE_ID  = 'xwvzrrrv'
@@ -169,7 +169,7 @@ export default function DiagnosisForm() {
           rows={3}
           value={form.mensaje}
           onChange={set}
-          placeholder="¿Cuál es la URL de tu sitio web actual? ¿Qué problemas notas más?"
+          placeholder="¿Qué tarea tediosa o problema te gustaría delegar a nuestros agentes?"
           style={{ ...inputStyle, resize: 'none' }}
         />
       </Field>

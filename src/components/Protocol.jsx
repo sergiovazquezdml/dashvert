@@ -5,10 +5,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 const STEPS = [
-  { num: '01', title: 'Escaneo Neuronal', desc: 'Análisis simultáneo de rendimiento, conversión y semántica. Detectamos cada debilidad en tiempo récord.' },
-  { num: '02', title: 'Arquitectura Adaptativa', desc: 'Desplegamos una estrategia multidireccional. Proyectamos una estructura inteligente enfocada en la psique de tu cliente.' },
-  { num: '03', title: 'Desarrollo Paralelo', desc: 'Nuestros equipos y agentes de IA trabajan al unísono. Construimos con código purificado, veloz y altamente escalable.' },
-  { num: '04', title: 'Despliegue Continuo', desc: 'Lanzamiento táctico con monitorización centralizada. Nuestro motor optimiza las conversiones de forma constante e incansable.' }
+  { num: '01', title: 'Onboarding Personalizado', desc: 'Cuéntanos cuáles son tus tareas tediosas en un cuestionario rápido. Nuestro algoritmo seleccionará los asistentes ideales para ti.' },
+  { num: '02', title: 'Explora el Catálogo', desc: 'Agrega a tu Hub a expertos como Arturo para impuestos o Sofía para nutrición con un solo clic.' },
+  { num: '03', title: 'Delega y Chatea', desc: 'Interactúa naturalmente. Tus asistentes analizan el contexto y devuelven respuestas inteligentes de forma inmediata.' },
+  { num: '04', title: 'Desarrolla el Tuyo', desc: 'Usa el portal de creadores para entrenar a tu propio agente y únete a la revolución de la comunidad Nex2u.' }
 ]
 
 export default function Protocol() {
@@ -40,7 +40,7 @@ export default function Protocol() {
       <div className="w-full max-w-7xl mx-auto">
         
         <h2 className="protocol-title text-[clamp(3rem,5vw,5.5rem)] font-black text-white leading-[0.9] tracking-tighter mb-8 w-full max-w-6xl drop-shadow-lg">
-          Inteligencia centralizada. Ejecución quirúrgica en cuatro fases.
+          Delega la fricción. Recupera tu tiempo en cuatro pasos.
         </h2>
 
         <div className="flex flex-col gap-12 md:gap-8">
