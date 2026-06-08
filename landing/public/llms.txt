@@ -1,0 +1,35 @@
+# impulsAI
+
+impulsAI is an AI transformation company based in Mexico, serving businesses across Latin America.
+
+## What we do
+We design and implement AI systems for mid-size and large companies: process automation, AI agents, predictive analytics, and AI integration with existing ERP/CRM infrastructure. We deliver working systems, not strategy presentations.
+
+## Who we serve
+- CEOs, Operations Directors, and Digital Transformation leaders
+- Companies with 50–500+ employees
+- Industries: manufacturing, retail, logistics, financial services, healthcare, corporate education
+- Geography: Mexico and Latin America
+
+## What makes us different
+- We deliver working systems, not strategy decks or PowerPoint roadmaps
+- Implementation in weeks, not months — first results in 4 weeks
+- We integrate with existing infrastructure — no rip-and-replace
+- We understand business processes before writing a line of code
+- Local team in Latin America with global standards
+
+## Services
+1. Process automation — AI agents that handle repetitive operations (reports, follow-ups, validations)
+2. Data-driven decisions — predictive analytics for sales, inventory, and customer behavior
+3. Infrastructure integration — AI layer on top of existing CRM, ERP, and databases
+
+## Key pages
+- Homepage: https://impulsai.mx
+- Services: https://impulsai.mx/servicios
+- How it works: https://impulsai.mx/proceso
+- Pricing: https://impulsai.mx/precios
+- Machine-readable pricing: https://impulsai.mx/pricing.md
+- Contact: https://impulsai.mx/contacto
+
+## Contact
+hello@impulsai.mx

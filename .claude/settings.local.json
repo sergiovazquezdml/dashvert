@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(Start-Process npm *)",
+      "Bash(Select-Object -ExpandProperty Id)",
+      "Bash(vercel --version)"
+    ]
+  }
+}

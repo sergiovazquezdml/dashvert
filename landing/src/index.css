@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Kumbh Sans';
+  src: url('/fonts/KumbhSans-VariableFont_YOPQ,wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  body {
+    background-color: #FFFFFF;
+    color: #1E293B;
+    font-family: 'Kumbh Sans', system-ui, sans-serif;
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    line-height: 1.6;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  #root { width: 100%; min-height: 100vh; position: relative; }
+
+  ::selection { background: rgba(79, 70, 229, 0.15); color: #4F46E5; }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #FFFFFF; }
+  ::-webkit-scrollbar-thumb { background: rgba(79, 70, 229, 0.25); border-radius: 3px; }
+
+  h1, h2, h3, h4 {
+    font-family: 'Outfit', system-ui, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #0F172A;
+  }
+}
+
+@layer utilities {
+  /* Gradient text */
+  .text-gradient {
+    background: linear-gradient(125deg, #4F46E5 0%, #7C3AED 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Glass */
+  .glass {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(79, 70, 229, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  }
+  .glass-light {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(79, 70, 229, 0.06);
+  }
+
+  /* Glows */
+  .glow    { box-shadow: 0 10px 40px rgba(79, 70, 229, 0.06); }
+  .glow-lg { box-shadow: 0 20px 80px rgba(79, 70, 229, 0.08); }
+
+  /* Buttons */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.9rem 1.9rem;
+    border-radius: 9999px;
+    font-family: 'Kumbh Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.01em;
+    background: linear-gradient(135deg, #4F46E5, #7C3AED);
+    color: #FFFFFF;
+    transition: transform 0.22s cubic-bezier(.25,.46,.45,.94), box-shadow 0.22s ease;
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.2);
+  }
+  .btn-primary:hover {
+    transform: scale(1.03) translateY(-2px);
+    box-shadow: 0 14px 36px rgba(79, 70, 229, 0.3);
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.65rem;
+    border-radius: 9999px;
+    font-family: 'Kumbh Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1.5px solid rgba(79, 70, 229, 0.2);
+    color: #334155;
+    transition: all 0.22s ease;
+  }
+  .btn-ghost:hover {
+    border-color: rgba(79, 70, 229, 0.4);
+    color: #0F172A;
+    background: rgba(79, 70, 229, 0.05);
+  }
+
+  /* Section spacing — REDUCED */
+  .section-pad { padding: clamp(3rem,5vw,5rem) clamp(1.5rem,5vw,5rem); }
+
+  /* Mono tag style */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #4F46E5;
+    font-weight: 700;
+  }
+}

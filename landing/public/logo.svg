@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 40" fill="none" role="img" aria-label="impulsAI">
+  <defs>
+    <linearGradient id="mark-g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0EA5E9"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+    <linearGradient id="text-g" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0EA5E9"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Mark: clean gradient square -->
+  <rect x="0" y="0" width="40" height="40" rx="10" fill="url(#mark-g)"/>
+
+  <!-- Double chevron: forward momentum symbol -->
+  <path d="M9 14 L17 20 L9 26"  stroke="white" stroke-width="3"   stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M18 14 L26 20 L18 26" stroke="white" stroke-width="3"   stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Accent dot top-right of mark -->
+  <circle cx="33" cy="9" r="3" fill="white" opacity="0.9"/>
+
+  <!-- Wordmark: "impuls" -->
+  <text
+    x="54" y="29"
+    font-family="'Syne', system-ui, sans-serif"
+    font-weight="700"
+    font-size="24"
+    letter-spacing="-0.5"
+    fill="#F5F5F5"
+  >impuls</text>
+
+  <!-- "AI" gradient -->
+  <text
+    x="176" y="29"
+    font-family="'Syne', system-ui, sans-serif"
+    font-weight="700"
+    font-size="24"
+    letter-spacing="-0.5"
+    fill="url(#text-g)"
+  >AI</text>
+</svg>
