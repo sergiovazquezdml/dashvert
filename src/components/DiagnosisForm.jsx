@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 
 const INTERESTS = [
-  'Finanzas e Impuestos',
-  'Salud y Nutrición',
-  'Legal y Seguros',
-  'Viajes y Productividad',
+  'Finanzas & Impuestos',
+  'Salud & Bienestar',
+  'Legal & Seguros',
+  'Optimización Industrial',
   'Crear mi propio asistente',
 ]
 

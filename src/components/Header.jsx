@@ -2,10 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 
 const NAV = [
-  { label: 'Servicios',        href: '#servicios' },
-  { label: 'Proceso',          href: '#proceso' },
-  { label: 'Por qué nosotros', href: '#filosofia' },
-  { label: 'Casos reales',     href: '#casos' },
+  { label: 'Catálogo',    href: '#catalogo' },
+  { label: 'Metodología', href: '#proceso' },
+  { label: 'Valores',     href: '#filosofia' },
 ]
 
 function Logo() {
@@ -29,7 +28,7 @@ function Logo() {
   )
 }
 
-export default function Header() {
+export default function Header({ user, onOpenLogin, onLogout }) {
   const ref = useRef(null)
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
@@ -84,30 +83,39 @@ export default function Header() {
         </ul>
 
         {/* CTA */}
-        <a
-          href="#diagnostico"
-          className="hidden md:inline-flex items-center gap-2.5 px-5.5 py-2.5 rounded-full text-[13px] font-extrabold shrink-0 transition-all duration-250 shadow-sm"
-          style={{
-            background: 'rgba(79, 70, 229, 0.08)',
-            border: '1px solid rgba(79, 70, 229, 0.25)',
-            color: '#4F46E5',
-          }}
-          onMouseEnter={e => {
-            e.currentTarget.style.background = 'linear-gradient(135deg, #4F46E5, #7C3AED)'
-            e.currentTarget.style.color = '#FFFFFF'
-            e.currentTarget.style.borderColor = 'transparent'
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.background = 'rgba(79, 70, 229, 0.08)'
-            e.currentTarget.style.color = '#4F46E5'
-            e.currentTarget.style.borderColor = 'rgba(79, 70, 229, 0.25)'
-          }}
-        >
-          Diagnóstico gratis
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M2 6H10M7.5 3.5L10 6L7.5 8.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </a>
+        {user ? (
+          <button
+            onClick={onLogout}
+            className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-extrabold shrink-0 border border-slate-200/80 text-slate-700 bg-slate-50/50 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors cursor-pointer"
+          >
+            <span>{user.name.split(' ')[0]} (Cerrar Sesión)</span>
+          </button>
+        ) : (
+          <button
+            onClick={onOpenLogin}
+            className="hidden md:inline-flex items-center gap-2.5 px-5.5 py-2.5 rounded-full text-[13px] font-extrabold shrink-0 transition-all duration-250 shadow-sm cursor-pointer"
+            style={{
+              background: 'rgba(79, 70, 229, 0.08)',
+              border: '1px solid rgba(79, 70, 229, 0.25)',
+              color: '#4F46E5',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = 'linear-gradient(135deg, #4F46E5, #7C3AED)'
+              e.currentTarget.style.color = '#FFFFFF'
+              e.currentTarget.style.borderColor = 'transparent'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = 'rgba(79, 70, 229, 0.08)'
+              e.currentTarget.style.color = '#4F46E5'
+              e.currentTarget.style.borderColor = 'rgba(79, 70, 229, 0.25)'
+            }}
+          >
+            Acceder al Hub
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M2 6H10M7.5 3.5L10 6L7.5 8.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        )}
 
         {/* Mobile toggle */}
         <button
@@ -149,9 +157,15 @@ export default function Header() {
               {n.label}
             </a>
           ))}
-          <a href="#diagnostico" className="btn-primary justify-center mt-3" onClick={() => setOpen(false)}>
-            Diagnóstico gratis →
-          </a>
+          {user ? (
+            <button onClick={() => { onLogout(); setOpen(false) }} className="btn-primary justify-center mt-3 cursor-pointer">
+              Cerrar Sesión ({user.name.split(' ')[0]})
+            </button>
+          ) : (
+            <button onClick={() => { onOpenLogin(); setOpen(false) }} className="btn-primary justify-center mt-3 cursor-pointer">
+              Acceder al Hub →
+            </button>
+          )}
         </div>
       )}
     </header>

@@ -46,9 +46,9 @@ export default function Footer() {
               </p>
               <ul className="space-y-2.5 text-xs text-slate-700 font-bold">
                 {[
-                  'Acceso a todos los asistentes premium',
-                  'Respuestas inmediatas a cualquier duda',
-                  'Cancela tu plan en cualquier momento',
+                  'Selección modular de asistentes especializados',
+                  'Respuestas inmediatas y 100% privadas',
+                  'Sin rentas fijas: activa o desactiva en un clic',
                 ].map(item => (
                   <li key={item} className="flex items-start gap-2.5">
                     <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center bg-indigo-50 border border-indigo-200">

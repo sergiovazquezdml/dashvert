@@ -41,7 +41,7 @@ export default function Hero() {
       <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-start">
         <h1 className="font-black tracking-tighter leading-[0.95] text-[clamp(3.5rem,8vw,8rem)] mb-10 w-full">
           <div className="overflow-hidden pb-4">
-            <div ref={title1Ref} className="text-white drop-shadow-2xl">Expertos a tu lado.</div>
+            <div ref={title1Ref} className="text-white drop-shadow-2xl">Tu equipo de expertos.</div>
           </div>
           <div className="overflow-hidden pb-4">
             <div ref={title2Ref} className="text-indigo-300">A una fracción del costo.</div>
@@ -49,11 +49,11 @@ export default function Hero() {
         </h1>
         
         <p ref={subRef} className="max-w-2xl text-[clamp(1.125rem,2vw,1.5rem)] text-slate-200 leading-relaxed font-medium mb-12">
-          Nex2u es tu Hub de asistentes personales premium impulsado por inteligencia artificial. Delega tareas de finanzas, salud y productividad a un equipo experto disponible 24/7.
+          Nex2u es el primer Hub de asistentes especializados con IA en México. Construye tu comité personal de especialistas en finanzas, salud, legal y procesos, disponibles 24/7. Paga únicamente por los que actives.
         </p>
 
         <div ref={ctaRef}>
-          <a href="#servicios" className="inline-flex items-center justify-center bg-white text-slate-950 px-12 py-6 rounded-full text-lg font-bold hover:bg-indigo-400 hover:text-white transition-colors duration-500">
+          <a href="#catalogo" className="inline-flex items-center justify-center bg-white text-slate-950 px-12 py-6 rounded-full text-lg font-bold hover:bg-indigo-400 hover:text-white transition-colors duration-500">
             Explorar asistentes
           </a>
         </div>

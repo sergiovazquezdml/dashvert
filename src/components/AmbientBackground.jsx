@@ -115,22 +115,20 @@ export default function AmbientBackground() {
         // Mouse attractor (pulling drifted positions)
         applyAttractor(p, mouse.x, mouse.y, interactionRadius, 22)
 
-        // Stickman (Octopus) attractor & color reaction
+        // Stickman (Octopus) glow reaction (without clumping points)
         if (sm && sm.opacity > 0.01) {
           const smOpacity = sm.opacity !== undefined ? sm.opacity : 1.0
           
-          applyAttractor(p, sm.x, sm.y, 240, 40 * smOpacity)
-
           const dx = sm.x - p.homeX
           const dy = sm.y - p.homeY
           const dist = Math.sqrt(dx * dx + dy * dy)
-          if (dist < 260) {
-            const ratio = (260 - dist) / 260
-            p.size = p.baseSize + ratio * 8.0 * smOpacity
+          if (dist < 240) {
+            const ratio = (240 - dist) / 240
+            p.size = p.baseSize + ratio * 3.5 * smOpacity
             
-            const purpleAlpha = 0.22 + ratio * 0.6
+            const purpleAlpha = 0.22 + ratio * 0.4
             if (smOpacity > 0.05) {
-              p.color = `rgba(168, 85, 247, ${Math.max(0.25, purpleAlpha * smOpacity)})`
+              p.color = `rgba(168, 85, 247, ${Math.max(0.2, purpleAlpha * smOpacity)})`
             } else {
               p.color = p.baseColor
             }
