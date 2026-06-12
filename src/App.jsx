@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import AmbientBackground from './components/AmbientBackground'
 import Header from './components/Header'
 import Hero from './components/Hero'
@@ -8,40 +7,38 @@ import CreatorsForum from './components/CreatorsForum'
 import Philosophy from './components/Philosophy'
 import Protocol from './components/Protocol'
 import Footer from './components/Footer'
-import InteractiveRocket from './components/InteractiveRocket'
-import AuthModal from './components/AuthModal'
 
 export default function App() {
-  const [user, setUser] = useState(null)
-  const [isAuthOpen, setIsAuthOpen] = useState(false)
-
   return (
-    <div className="relative min-h-screen bg-slate-950">
+    <div className="relative min-h-screen bg-white">
       <AmbientBackground />
-      <InteractiveRocket />
-      
-      <Header
-        user={user}
-        onOpenLogin={() => setIsAuthOpen(true)}
-        onLogout={() => setUser(null)}
-      />
+
+      <Header />
 
       <main>
         <Hero />
         <Stats />
-        <HubWorkspace user={user} />
-        <CreatorsForum user={user} />
+        {/* Services: Problem + 3 Pillars + AEO + FAQ */}
+        <HubWorkspace />
+        {/* Calculator: 6-step pricing calculator */}
+        <CreatorsForum />
         <Philosophy />
         <Protocol />
       </main>
 
       <Footer />
 
-      <AuthModal
-        isOpen={isAuthOpen}
-        onClose={() => setIsAuthOpen(false)}
-        onLogin={(u) => setUser(u)}
-      />
+      {/* Floating CTA — always visible */}
+      <a
+        href="#diagnostico"
+        className="fixed bottom-6 right-6 z-50 btn-primary text-sm py-3 px-5 shadow-2xl"
+        style={{ boxShadow: '0 8px 32px rgba(79,70,229,0.35)' }}
+      >
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 1v6m0 0l-2-2m2 2l2-2M1 10.5A2.5 2.5 0 003.5 13h7a2.5 2.5 0 002.5-2.5V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+        Auditoría gratuita
+      </a>
     </div>
   )
 }

@@ -13,17 +13,26 @@ export default function AmbientBackground() {
     let width, height
     let points = []
     const spacing = 38
-    const interactionRadius = 130
-    const returnSpeed = 0.08
+    const interactionRadius = 155
 
     const mouse = { x: -9999, y: -9999 }
 
-    const colors = [
-      'rgba(79, 70, 229, 0.3)',
-      'rgba(124, 58, 237, 0.26)',
-      'rgba(16, 185, 129, 0.24)',
-      'rgba(99, 102, 241, 0.2)',
+    const lightColors = [
+      { r: 79, g: 70, b: 229, baseA: 0.22 },
+      { r: 124, g: 58, b: 237, baseA: 0.18 },
+      { r: 16, g: 185, b: 129, baseA: 0.18 },
+      { r: 99, g: 102, b: 241, baseA: 0.16 }
     ]
+
+    const darkColors = [
+      { r: 129, g: 140, b: 248, baseA: 0.38 },
+      { r: 167, g: 139, b: 250, baseA: 0.34 },
+      { r: 52, g: 211, b: 153, baseA: 0.34 },
+      { r: 165, g: 180, b: 252, baseA: 0.30 }
+    ]
+
+    let targetTheme = 0
+    let currentTheme = 0
 
     function buildGrid() {
       width = canvas.width = window.innerWidth
@@ -35,16 +44,21 @@ export default function AmbientBackground() {
 
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
-          const defaultColor = colors[(row + col) % colors.length]
+          const colorIndex = (row + col) % lightColors.length
           points.push({
             homeX: col * spacing,
             homeY: row * spacing,
             x: col * spacing,
             y: row * spacing,
+            vx: 0,
+            vy: 0,
             baseSize: 1.8,
             size: 1.8,
-            baseColor: defaultColor,
-            color: defaultColor,
+            sizeTarget: 1.8,
+            alpha: 0,
+            alphaTarget: 0,
+            colorIndex: colorIndex,
+            color: '',
           })
         }
       }
@@ -67,83 +81,127 @@ export default function AmbientBackground() {
       resizeTimer = setTimeout(buildGrid, 200)
     }
 
+    const updateTheme = () => {
+      let isDark = false
+      const y = window.scrollY + window.innerHeight * 0.5
+      const darkSections = document.querySelectorAll('[data-theme="dark"]')
+      
+      darkSections.forEach(sec => {
+        const rect = sec.getBoundingClientRect()
+        const top = rect.top + window.scrollY
+        const bottom = rect.bottom + window.scrollY
+        if (y >= top - 100 && y <= bottom + 100) {
+          isDark = true
+        }
+      })
+      targetTheme = isDark ? 1 : 0
+    }
+
     window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('mouseleave', handleMouseLeave)
     window.addEventListener('resize', handleResize)
+    window.addEventListener('scroll', updateTheme)
 
-    // Recalculate canvas height periodically (content can change)
+    // Initial check
+    setTimeout(updateTheme, 100)
+
+    // Recalculate canvas height periodically
     const heightCheck = setInterval(() => {
       const newH = document.documentElement.scrollHeight
-      if (Math.abs(newH - height) > 50) buildGrid()
-    }, 2000)
-
-    function applyAttractor(p, ax, ay, radius, strength) {
-      const dx = ax - p.homeX
-      const dy = ay - p.homeY
-      const dist = Math.sqrt(dx * dx + dy * dy)
-      if (dist < radius && dist > 0) {
-        const force = (radius - dist) / radius
-        const pull = force * force * strength
-        p.x += (dx / dist) * pull
-        p.y += (dy / dist) * pull
-        p.size = Math.max(p.size, p.baseSize + force * 3.5)
+      if (Math.abs(newH - height) > 50) {
+        buildGrid()
+        updateTheme()
       }
-    }
+    }, 2000)
 
     const render = () => {
       ctx.clearRect(0, 0, width, height)
 
-      // Time variable for continuous drift
-      const time = performance.now() * 0.0006
+      // Smooth theme transition (12% LERP interpolation per frame — 3.5x faster)
+      currentTheme += (targetTheme - currentTheme) * 0.12
 
-      // Stickman (Octopus) position from global
-      const sm = window.__stickmanPos || null
+      // Interpolate wrapper background
+      const bgR = Math.round(255 + (11 - 255) * currentTheme)
+      const bgG = Math.round(255 + (15 - 255) * currentTheme)
+      const bgB = Math.round(255 + (25 - 255) * currentTheme)
+      if (containerRef.current) {
+        containerRef.current.style.backgroundColor = `rgb(${bgR}, ${bgG}, ${bgB})`
+      }
+
+      // Wave physics time variable (speed of the waves)
+      const time = performance.now() * 0.0015
 
       for (let i = 0; i < points.length; i++) {
         const p = points[i]
         
-        // Mobile drift logic: organic continuous movement
-        const driftX = Math.sin(time + p.homeX * 0.02 + p.homeY * 0.02) * 12
-        const driftY = Math.cos(time + p.homeX * 0.02 - p.homeY * 0.02) * 12
-        
-        // Base positions with drift
-        p.x = p.homeX + driftX
-        p.y = p.homeY + driftY
-        p.size = p.baseSize
-        p.color = p.baseColor
+        // Diagonal wave propagation coordinates displacement
+        const waveAngle = time + (p.homeX * 0.007) + (p.homeY * 0.007)
+        const waveX = Math.sin(waveAngle) * 11
+        const waveY = Math.cos(waveAngle) * 11
 
-        // Mouse attractor (pulling drifted positions)
-        applyAttractor(p, mouse.x, mouse.y, interactionRadius, 22)
+        // Size wave modulation (creates a 3D depth ripple effect)
+        const sizeWave = Math.sin(time * 1.3 + (p.homeX * 0.005) + (p.homeY * 0.007))
+        p.baseSize = 1.4 + (sizeWave + 1.0) * 0.9 // oscillates between 1.4px and 3.2px
 
-        // Stickman (Octopus) glow reaction (without clumping points)
-        if (sm && sm.opacity > 0.01) {
-          const smOpacity = sm.opacity !== undefined ? sm.opacity : 1.0
-          
-          const dx = sm.x - p.homeX
-          const dy = sm.y - p.homeY
-          const dist = Math.sqrt(dx * dx + dy * dy)
-          if (dist < 240) {
-            const ratio = (240 - dist) / 240
-            p.size = p.baseSize + ratio * 3.5 * smOpacity
+        const targetX = p.homeX + waveX
+        const targetY = p.homeY + waveY
+
+        // Hooke's Law spring back towards home target
+        const dx = targetX - p.x
+        const dy = targetY - p.y
+        p.vx += dx * 0.045
+        p.vy += dy * 0.045
+
+        // Mouse repulsion and glow halos
+        if (mouse.x !== -9999) {
+          const mdx = p.x - mouse.x
+          const mdy = p.y - mouse.y
+          const mdist = Math.sqrt(mdx * mdx + mdy * mdy)
+          if (mdist < interactionRadius && mdist > 0) {
+            const force = (interactionRadius - mdist) / interactionRadius
+            const push = force * force * 1.55 // push force
             
-            const purpleAlpha = 0.22 + ratio * 0.4
-            if (smOpacity > 0.05) {
-              p.color = `rgba(168, 85, 247, ${Math.max(0.2, purpleAlpha * smOpacity)})`
-            } else {
-              p.color = p.baseColor
-            }
+            // Add push velocity (away from mouse)
+            p.vx += (mdx / mdist) * push
+            p.vy += (mdy / mdist) * push
+
+            // Set hover sizes & brightness offsets
+            p.sizeTarget = p.baseSize + force * 2.8
+            p.alphaTarget = force * 0.65
+          } else {
+            p.sizeTarget = p.baseSize
+            p.alphaTarget = 0
           }
+        } else {
+          p.sizeTarget = p.baseSize
+          p.alphaTarget = 0
         }
 
-        // Smooth physics interpolation (LERP)
-        const tx = p.x
-        const ty = p.y
-        p.x = p.homeX + driftX + (tx - (p.homeX + driftX)) * 0.6
-        p.y = p.homeY + driftY + (ty - (p.homeY + driftY)) * 0.6
+        // Apply friction damping
+        p.vx *= 0.82
+        p.vy *= 0.82
 
+        // Move particle
+        p.x += p.vx
+        p.y += p.vy
+
+        // Interpolate visual attributes
+        p.size += (p.sizeTarget - p.size) * 0.15
+        p.alpha += (p.alphaTarget - p.alpha) * 0.1
+
+        // Color interpolation
+        const lc = lightColors[p.colorIndex]
+        const dc = darkColors[p.colorIndex]
+        const r = Math.round(lc.r + (dc.r - lc.r) * currentTheme)
+        const g = Math.round(lc.g + (dc.g - lc.g) * currentTheme)
+        const b = Math.round(lc.b + (dc.b - lc.b) * currentTheme)
+        const baseA = lc.baseA + (dc.baseA - lc.baseA) * currentTheme
+        
+        const finalA = Math.min(1.0, baseA + p.alpha)
+        
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
-        ctx.fillStyle = p.color
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${finalA})`
         ctx.fill()
       }
 
@@ -158,11 +216,14 @@ export default function AmbientBackground() {
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseleave', handleMouseLeave)
       window.removeEventListener('resize', handleResize)
+      window.removeEventListener('scroll', updateTheme)
     }
   }, [])
 
+  const containerRef = useRef(null)
+
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-slate-950">
+    <div ref={containerRef} className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-white">
       <canvas ref={canvasRef} className="absolute top-0 left-0 block" />
     </div>
   )

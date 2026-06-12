@@ -22,7 +22,7 @@ export default {
       fontFamily: {
         display: ['"Outfit"', 'system-ui', 'sans-serif'],
         sans:    ['"Kumbh Sans"', 'system-ui', 'sans-serif'],
-        mono:    ['"JetBrains Mono"', 'Menlo', 'monospace'],
+        mono:    ['"Kumbh Sans"', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         'display-2xl': ['clamp(2.8rem, 6.5vw, 6.8rem)', { lineHeight: '1.05', letterSpacing: '-0.02em' }],

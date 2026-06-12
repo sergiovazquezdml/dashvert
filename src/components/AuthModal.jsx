@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 export default function AuthModal({ isOpen, onClose, onLogin }) {
-  const [email, setEmail] = useState('sergio@nex2u.ai')
+  const [email, setEmail] = useState('sergio@dashvert.co')
   const [password, setPassword] = useState('123456')
   const [name, setName] = useState('Sergio Vázquez')
   const [isRegister, setIsRegister] = useState(false)
@@ -50,8 +50,8 @@ export default function AuthModal({ isOpen, onClose, onLogin }) {
 
         {/* Modal Header */}
         <div className="text-center mb-8">
-          <span className="font-display font-black text-2xl tracking-[-0.03em] text-slate-100 block mb-2">
-            Nex<span className="text-gradient">2u</span>
+          <span className="font-sans font-black text-2xl tracking-[-0.03em] text-slate-100 block mb-2 lowercase">
+            dashvert
           </span>
           <h3 className="text-lg font-bold text-white tracking-tight">
             {isRegister ? 'Crea tu cuenta' : 'Ingresa a tu Hub'}

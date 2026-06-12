@@ -1,532 +1,496 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-const INITIAL_PROPOSALS = [
-  {
-    id: 1,
-    title: 'Asistente de Compras Inteligentes del Súper',
-    author: 'Carlos G. (Nutriólogo & Creador)',
-    category: 'Bienestar / Consumo',
-    description: 'Arma listas del súper optimizadas según presupuestos familiares, perfiles nutricionales y alertas de ofertas en supermercados mexicanos en tiempo real.',
-    votes: 142,
-    comments: [
-      { author: 'Elena F.', text: '¡Me urge esto! Gasto demasiado en el súper sin planificar.' },
-      { author: 'Mateo R.', text: 'Si logramos sincronizarlo con tickets de Soriana y Walmart sería un hit.' }
-    ]
-  },
-  {
-    id: 2,
-    title: 'Asistente Legal de Patentes e IMPI',
-    author: 'Sofía M. (Abogada Corporativa)',
-    category: 'Legal',
-    description: 'Guía automatizada paso a paso para emprendedores en México sobre registro de marcas, búsqueda de anterioridad en el IMPI y contestación de negativas de registro.',
-    votes: 98,
-    comments: [
-      { author: 'Carlos G.', text: 'El proceso del IMPI siempre es confuso. Apoyo totalmente la propuesta.' }
-    ]
-  },
-  {
-    id: 3,
-    title: 'Asistente para Músicos Independientes',
-    author: 'Alan K. (Productor de Audio)',
-    category: 'Productividad / Arte',
-    description: 'Estructuración de contratos de cesión de derechos musicales, planeación de lanzamientos en Spotify, y cálculo de regalías de distribución digital.',
-    votes: 79,
-    comments: [
-      { author: 'Luna M.', text: 'Como artista independiente, pagar a un gestor es imposible al principio. Esto salvaría vidas.' }
-    ]
-  }
+gsap.registerPlugin(ScrollTrigger)
+
+// ─── Pricing Config ─────────────────────────────────────────────────────
+const SERVICE_BASE = {
+  audit:      { label: 'Auditoría + Diagnóstico',    price: 500,   desc: 'Análisis completo de velocidad, SEO, CRO y AEO' },
+  optimize:   { label: 'Optimización técnica',        price: 1500,  desc: 'Mejora de PageSpeed, Core Web Vitals y rendimiento' },
+  redesign:   { label: 'Rediseño de sitio existente', price: 2500,  desc: 'Misma URL, nueva identidad y arquitectura' },
+  newsite:    { label: 'Sitio nuevo desde cero',      price: 4000,  desc: 'Diseño, desarrollo y despliegue completo' },
+}
+
+const DESIGN_TIER = {
+  standard: { label: 'Estándar',  multiplier: 1.0,  desc: 'Diseño profesional limpio y efectivo' },
+  premium:  { label: 'Premium',   multiplier: 1.5,  desc: 'Diseño de alto impacto con animaciones' },
+  elite:    { label: 'Elite',     multiplier: 2.0,  desc: 'Diseño de revista: motion, partículas, 3D' },
+}
+
+const SEO_TIER = {
+  none:     { label: 'Ninguno',        price: 0,    desc: 'Sin SEO en este proyecto' },
+  basic:    { label: 'SEO básico',     price: 800,  desc: 'Meta tags, schema, sitemap, URLs limpias' },
+  advanced: { label: 'SEO avanzado',   price: 1800, desc: 'Todo el básico + keyword research + linkbuilding' },
+  aeo:      { label: 'SEO + AEO',      price: 2800, desc: 'SEO completo + optimización para ChatGPT, Perplexity, Gemini' },
+}
+
+const ADDONS = [
+  { id: 'copy',       label: 'Copywriting',           price: 1500, desc: 'Textos escritos para conversión' },
+  { id: 'assets',     label: 'Assets visuales',        price: 800,  desc: 'Ilustraciones, íconos y fotografía' },
+  { id: 'analytics',  label: 'Analytics & Heatmaps',   price: 600,  desc: 'GA4, Hotjar, dashboard de métricas' },
+  { id: 'crm',        label: 'Integración CRM',        price: 1200, desc: 'HubSpot, Pipedrive o Notion' },
 ]
 
-export default function CreatorsForum({ user }) {
-  const [proposals, setProposals] = useState(INITIAL_PROPOSALS)
-  const [newTitle, setNewTitle] = useState('')
-  const [newDesc, setNewDesc] = useState('')
-  const [newCat, setNewCat] = useState('Finanzas')
-  const [activeProposalId, setActiveProposalId] = useState(null)
-  
-  // Comment states
-  const [commentText, setCommentText] = useState('')
-  
-  // Co-creator Application states
-  const [isApplying, setIsApplying] = useState(false)
-  const [applyName, setApplyName] = useState(user ? user.name : '')
-  const [applyRole, setApplyRole] = useState('Desarrollador de IA')
-  const [applyShare, setApplyShare] = useState(70) // 70% commission
-  const [projectedUsers, setProjectedUsers] = useState(500)
-  const [applySuccess, setApplySuccess] = useState(false)
+const RETAINER = {
+  none:     { label: 'Sin retención mensual', price: 0,    desc: 'Proyecto puntual sin continuidad' },
+  basic:    { label: 'Básico — $500/mes',     price: 500,  desc: 'Monitoreo, actualizaciones menores, reporte mensual' },
+  advanced: { label: 'Avanzado — $1,200/mes', price: 1200, desc: 'SEO continuo + reportes de posicionamiento' },
+  premium:  { label: 'Premium — $2,200/mes',  price: 2200, desc: 'AEO activo + CRO iterativo + actualizaciones visuales' },
+}
 
-  // Vote handler
-  const handleVote = (id, e) => {
-    e.stopPropagation()
-    setProposals(proposals.map(p => {
-      if (p.id === id) {
-        return { ...p, votes: p.votes + 1 }
-      }
-      return p
+const PAGES_RANGES = [
+  { value: 1,  label: '1-3 páginas',   multiplier: 1.0 },
+  { value: 2,  label: '4-8 páginas',   multiplier: 1.4 },
+  { value: 3,  label: '9-20 páginas',  multiplier: 1.9 },
+  { value: 4,  label: '20+ páginas',   multiplier: 2.8 },
+]
+
+const STEPS = ['Servicio', 'Diseño', 'Páginas', 'Visibilidad', 'Add-ons', 'Retención']
+
+function StepIndicator({ current, total, labels }) {
+  return (
+    <div className="flex items-center gap-1 mb-10 overflow-x-auto pb-2">
+      {labels.map((label, i) => (
+        <div key={i} className="flex items-center gap-1 flex-shrink-0">
+          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest transition-all duration-300 ${
+            i < current ? 'bg-indigo-600 text-white' :
+            i === current ? 'bg-indigo-100 text-indigo-700 border border-indigo-300' :
+            'bg-slate-100 text-slate-400'
+          }`}>
+            <span className={`w-4 h-4 rounded-full text-[8px] flex items-center justify-center font-black ${
+              i < current ? 'bg-white text-indigo-600' :
+              i === current ? 'bg-indigo-600 text-white' :
+              'bg-slate-300 text-slate-500'
+            }`}>{i < current ? (
+              <svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M1.5 4L3.5 6L6.5 2" />
+              </svg>
+            ) : i + 1}</span>
+            <span className="hidden sm:block">{label}</span>
+          </div>
+          {i < total - 1 && (
+            <div className={`w-3 h-px ${i < current ? 'bg-indigo-400' : 'bg-slate-200'}`} />
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function OptionCard({ selected, onClick, label, desc, badge, price }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full text-left p-5 rounded-2xl border-2 transition-all duration-250 cursor-pointer group ${
+        selected
+          ? 'border-indigo-500 bg-indigo-50 shadow-md shadow-indigo-100'
+          : 'border-slate-200 bg-white hover:border-indigo-200 hover:shadow-sm'
+      }`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
+            <span className={`text-sm font-extrabold ${selected ? 'text-indigo-700' : 'text-slate-800'}`}>{label}</span>
+            {badge && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider bg-indigo-100 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400">
+                {badge.icon === 'lightning' && (
+                  <svg className="w-2.5 h-2.5 text-indigo-600 dark:text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                  </svg>
+                )}
+                {typeof badge === 'string' ? badge : badge.text}
+              </span>
+            )}
+          </div>
+          <p className="text-xs text-slate-500 font-medium leading-relaxed">{desc}</p>
+        </div>
+        {price !== undefined && (
+          <span className={`text-sm font-black shrink-0 ${selected ? 'text-indigo-600' : 'text-slate-600'}`}>
+            {price === 0 ? '—' : `+$${price.toLocaleString()}`}
+          </span>
+        )}
+      </div>
+      <div className={`mt-3 w-4 h-4 rounded-full border-2 transition-all ${
+        selected ? 'border-indigo-500 bg-indigo-500' : 'border-slate-300 group-hover:border-indigo-300'
+      } flex items-center justify-center`}>
+        {selected && (
+          <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+            <path d="M1.5 4L3.5 6L6.5 2" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        )}
+      </div>
+    </button>
+  )
+}
+
+// ─── Price Calculator ────────────────────────────────────────────────────
+function calcPrice({ service, design, pages, seo, addons, retainer }) {
+  const base = SERVICE_BASE[service]?.price ?? 0
+  const designMult = DESIGN_TIER[design]?.multiplier ?? 1
+  const pagesMult = PAGES_RANGES.find(p => p.value === pages)?.multiplier ?? 1
+  const seoPrice = SEO_TIER[seo]?.price ?? 0
+  const addonTotal = addons.reduce((sum, id) => sum + (ADDONS.find(a => a.id === id)?.price ?? 0), 0)
+  const retainerPrice = RETAINER[retainer]?.price ?? 0
+
+  const project = Math.round(base * designMult * pagesMult + seoPrice + addonTotal)
+  return { project, retainer: retainerPrice }
+}
+
+// ─── Main Component ──────────────────────────────────────────────────────
+export default function CreatorsForum() {
+  const comp = useRef(null)
+  const [step, setStep] = useState(0)
+  const [result, setResult] = useState(false)
+  const [form, setForm] = useState({
+    service: '',
+    design: 'premium',
+    pages: 1,
+    seo: 'basic',
+    addons: [],
+    retainer: 'none',
+  })
+
+  useEffect(() => {
+    let ctx = gsap.context(() => {
+      gsap.fromTo('.calc-title',
+        { y: 40, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: 'power3.out',
+          scrollTrigger: { trigger: '.calc-title', start: 'top 85%' } }
+      )
+    }, comp)
+    return () => ctx.revert()
+  }, [])
+
+  const toggleAddon = (id) => {
+    setForm(f => ({
+      ...f,
+      addons: f.addons.includes(id) ? f.addons.filter(a => a !== id) : [...f.addons, id]
     }))
   }
 
-  // Create new proposal
-  const handleCreateProposal = (e) => {
-    e.preventDefault()
-    if (!newTitle.trim() || !newDesc.trim()) return
-
-    const newProp = {
-      id: Date.now(),
-      title: newTitle,
-      author: user ? `${user.name} (Usuario Registrado)` : 'Creador Anónimo',
-      category: newCat,
-      description: newDesc,
-      votes: 1,
-      comments: []
-    }
-
-    setProposals([newProp, ...proposals])
-    setNewTitle('')
-    setNewDesc('')
+  const canGoNext = () => {
+    if (step === 0) return !!form.service
+    return true
   }
 
-  // Add comment
-  const handleAddComment = (e) => {
-    e.preventDefault()
-    if (!commentText.trim()) return
-
-    setProposals(proposals.map(p => {
-      if (p.id === activeProposalId) {
-        return {
-          ...p,
-          comments: [...p.comments, { author: user ? user.name : 'Visitante', text: commentText }]
-        }
-      }
-      return p
-    }))
-    setCommentText('')
-  }
-
-  // Handle Application Submit
-  const handleApplySubmit = (e) => {
-    e.preventDefault()
-    setApplySuccess(true)
-    setTimeout(() => {
-      setIsApplying(false)
-      setApplySuccess(false)
-    }, 3000)
-  }
-
-  const activeProposal = proposals.find(p => p.id === activeProposalId)
-
-  // Commission Calculations
-  const averagePrice = 200 // default price per assistant
-  const monthlyRevenue = projectedUsers * averagePrice
-  const developerCut = monthlyRevenue * (applyShare / 100)
+  const price = calcPrice(form)
+  const priceLow = Math.round(price.project * 0.9)
+  const priceHigh = Math.round(price.project * 1.15)
 
   return (
-    <section id="comunidad" className="relative z-10 px-6 py-24 bg-slate-950 text-white border-t border-slate-900">
-      <div className="w-full max-w-7xl mx-auto">
-        <div className="text-center max-w-4xl mx-auto mb-16">
-          <span className="tag mb-4">Comunidad de Creadores</span>
-          <h2 className="text-[clamp(2.5rem,4.5vw,4.5rem)] font-black leading-tight tracking-tighter mb-6 text-white">
-            Portal de Creadores,{' '}<span className="text-gradient">Reddit</span>{' '}&{' '}<span className="text-gradient">GitHub</span>
-          </h2>
-          <p className="text-lg text-slate-300 font-medium mb-10">
-            Propon asistentes, vota por las ideas que más te interesen y únete al desarrollo de agentes expertos. La conversación vive en nuestro foro estilo Reddit, en GitHub Discussions y en la comunidad — para que cada voz cuente y cada asistente que nazca aquí te genere comisiones reales.
-          </p>
-
-          {/* Ease-of-use callout */}
-          <div className="bg-slate-900/50 border border-slate-800/70 rounded-3xl p-8 text-left backdrop-blur-md">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest">Diseñado para todos</span>
+    <section id="calculadora" ref={comp} className="relative z-10 px-6 py-10">
+      <div className="max-w-[1800px] mx-auto">
+        <div className="relative rounded-[2.5rem] overflow-hidden p-10 md:p-14 shadow-2xl border border-slate-200/60 bg-white">
+          <div
+            className="absolute -top-20 left-1/2 -translate-x-1/2 w-80 h-40 pointer-events-none"
+            style={{ background: 'radial-gradient(ellipse, rgba(99, 102, 241, 0.06) 0%, transparent 70%)' }}
+          />
+          <div className="relative z-10">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="tag mb-4 text-indigo-600">Calculadora de inversión</span>
+              <h2 className="calc-title text-[clamp(2.5rem,4.5vw,4.5rem)] font-black leading-tight tracking-tighter mb-4 text-slate-900">
+                Cuánto cuesta mejorar tu sitio
+              </h2>
+              <p className="text-lg text-slate-500 font-medium">
+                Sin hablar con ventas. Sin esperar cotizaciones. En 60 segundos tienes un rango de precio real para tu proyecto.
+              </p>
             </div>
-            <h3 className="text-2xl md:text-3xl font-black text-white tracking-tight mb-3">
-              Usar los asistentes es <span className="text-gradient">increíblemente fácil.</span>
-            </h3>
-            <p className="text-base text-slate-300 font-medium mb-8 max-w-2xl">
-              Cada asistente se construye desde el principio con un objetivo claro: que cualquier persona pueda usarlo sin curva de aprendizaje. Sin tecnicismos, sin manuales. Solo conversa y obtén resultados.
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-              {[
-                {
-                  icon: (
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                    </svg>
-                  ),
-                  title: 'Habla en lenguaje natural',
-                  desc: 'Escribe como le escribirías a un amigo experto. Sin comandos ni formatos especiales.'
-                },
-                {
-                  icon: (
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="3" />
-                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-                      <path d="M4.93 4.93a10 10 0 0 0 0 14.14" />
-                    </svg>
-                  ),
-                  title: 'Respuestas al instante',
-                  desc: 'Cada asistente responde en segundos con información contextual, precisa y accionable.'
-                },
-                {
-                  icon: (
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 20h9" />
-                      <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-                    </svg>
-                  ),
-                  title: 'Se adapta a ti',
-                  desc: 'El Perfilador de datos entrena al asistente con tu contexto para que sus respuestas sean siempre más relevantes.'
-                },
-              ].map((item, i) => (
-                <div key={i} className="flex flex-col gap-3 p-5 bg-slate-950/50 border border-slate-800/60 rounded-2xl">
-                  <div className="w-10 h-10 rounded-xl bg-indigo-950/60 border border-indigo-900/40 flex items-center justify-center text-indigo-400">
-                    {item.icon}
-                  </div>
-                  <h4 className="text-sm font-extrabold text-white leading-snug">{item.title}</h4>
-                  <p className="text-xs font-medium text-slate-400 leading-relaxed">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Panel: Proposals & Comments */}
-          <div className="lg:col-span-8 flex flex-col gap-6">
-            
-            {activeProposalId ? (
-              // DETAILS & COMMENTS VIEW
-              <div className="bg-slate-900/40 border border-slate-800 rounded-3xl p-6 md:p-8 backdrop-blur-xl">
-                <button
-                  onClick={() => setActiveProposalId(null)}
-                  className="flex items-center gap-2 text-xs font-mono font-bold text-indigo-400 hover:text-indigo-300 transition-colors mb-6"
-                >
-                  ← Volver a propuestas
-                </button>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
 
-                <div className="flex items-start justify-between gap-4 mb-4">
-                  <div>
-                    <span className="px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase border bg-slate-950/60 text-slate-400 border-slate-800/80">
-                      {activeProposal.category}
-                    </span>
-                    <h3 className="text-2xl font-black text-white mt-3 leading-snug">{activeProposal.title}</h3>
-                    <p className="text-xs text-slate-400 font-mono mt-1">Propuesto por {activeProposal.author}</p>
-                  </div>
+              {/* ── Calculator Panel ── */}
+              <div className="lg:col-span-2 bg-slate-50 rounded-[2rem] border border-slate-100 shadow-inner p-8 md:p-10">
+            {!result ? (
+              <>
+                <StepIndicator current={step} total={STEPS.length} labels={STEPS} />
 
-                  <button
-                    onClick={(e) => handleVote(activeProposal.id, e)}
-                    className="flex flex-col items-center justify-center p-3.5 rounded-2xl bg-indigo-950/20 border border-indigo-900/30 text-indigo-300 hover:bg-indigo-950/40 hover:text-white transition-all duration-300 shrink-0 min-w-[76px] cursor-pointer"
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="mb-0.5">
-                      <polyline points="18 15 12 9 6 15"></polyline>
-                    </svg>
-                    <span className="text-xs font-mono font-black leading-none">{activeProposal.votes}</span>
-                    <span className="text-[8px] font-mono uppercase font-bold tracking-widest mt-1 opacity-80">Apoyos</span>
-                  </button>
-                </div>
-
-                <p className="text-sm font-medium text-slate-200 leading-relaxed mb-8">
-                  {activeProposal.description}
-                </p>
-
-                {/* Co-Creator Joint Development CTA */}
-                <div className="bg-slate-950/50 border border-slate-800/80 rounded-2xl p-6 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-                  <div>
-                    <h4 className="text-base font-extrabold text-white mb-1">¿Tienes experiencia en este tema?</h4>
-                    <p className="text-xs text-slate-400 font-medium">Postúlate como co-creador de este asistente para ayudarnos a diseñarlo y llévate regalías.</p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      setApplyName(user ? user.name : '')
-                      setIsApplying(true)
-                    }}
-                    className="btn-primary py-2.5 px-6 text-xs shrink-0 self-start sm:self-auto"
-                  >
-                    Postularme al Desarrollo
-                  </button>
-                </div>
-
-                {/* Comments Section */}
-                <div className="border-t border-slate-800/60 pt-6">
-                  <h4 className="text-sm font-mono font-bold text-slate-500 uppercase tracking-wider mb-4">
-                    Discusión ({activeProposal.comments.length})
-                  </h4>
-
-                  {activeProposal.comments.length === 0 ? (
-                    <p className="text-xs text-slate-500 font-medium py-4">No hay comentarios aún. Escribe el primero abajo.</p>
-                  ) : (
-                    <ul className="space-y-4 mb-6">
-                      {activeProposal.comments.map((c, idx) => (
-                        <li key={idx} className="bg-slate-950/30 border border-slate-900 p-4 rounded-2xl flex flex-col">
-                          <span className="text-xs font-bold text-slate-400 mb-1.5">{c.author}</span>
-                          <p className="text-xs font-medium text-slate-200 leading-relaxed">{c.text}</p>
-                        </li>
-                      ))}
-                    </ul>
+                <div key={step} className="animate-fade-in-slide">
+                  {/* Step 0: Service type */}
+                  {step === 0 && (
+                    <div>
+                      <h3 className="text-xl font-black text-slate-800 mb-6">¿Qué tipo de servicio necesitas?</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {Object.entries(SERVICE_BASE).map(([key, val]) => (
+                          <OptionCard
+                            key={key}
+                            selected={form.service === key}
+                            onClick={() => setForm(f => ({ ...f, service: key }))}
+                            label={val.label}
+                            desc={val.desc}
+                            price={val.price}
+                          />
+                        ))}
+                      </div>
+                    </div>
                   )}
 
-                  {/* Add Comment Form */}
-                  <form onSubmit={handleAddComment} className="flex gap-2">
-                    <input
-                      type="text"
-                      value={commentText}
-                      onChange={(e) => setCommentText(e.target.value)}
-                      placeholder={user ? "Escribe un comentario..." : "Inicia sesión para poder comentar..."}
-                      disabled={!user}
-                      className="flex-1 px-4 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-500/50 transition-colors font-medium disabled:opacity-40"
-                    />
-                    <button
-                      type="submit"
-                      disabled={!user || !commentText.trim()}
-                      className="btn-primary py-3 px-6 text-xs disabled:opacity-40 shrink-0"
-                    >
-                      Comentar
-                    </button>
-                  </form>
-                </div>
-
-              </div>
-            ) : (
-              // PROPOSALS LIST VIEW
-              <div className="flex flex-col gap-4">
-                <div className="flex justify-between items-center pb-2 border-b border-slate-900">
-                  <h3 className="text-sm font-mono font-bold text-slate-500 uppercase tracking-wider">
-                    Asistentes Propuestos por la Comunidad
-                  </h3>
-                </div>
-
-                {proposals.map(p => (
-                  <div
-                    key={p.id}
-                    onClick={() => setActiveProposalId(p.id)}
-                    className="group bg-slate-900/30 border border-slate-800/80 hover:border-indigo-500/30 hover:bg-slate-900/50 rounded-2xl p-5 md:p-6 transition-all duration-350 cursor-pointer flex justify-between items-center gap-6"
-                  >
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2.5">
-                        <span className="px-2.5 py-0.5 rounded-full text-[9px] font-mono font-bold tracking-wider uppercase border bg-slate-950/80 text-slate-400 border-slate-800">
-                          {p.category}
-                        </span>
-                        <span className="text-[10px] text-slate-500 font-mono font-bold">Por {p.author}</span>
+                  {/* Step 1: Design tier */}
+                  {step === 1 && (
+                    <div>
+                      <h3 className="text-xl font-black text-slate-800 mb-6">¿Qué nivel de diseño visual buscas?</h3>
+                      <div className="grid grid-cols-1 gap-4">
+                        {Object.entries(DESIGN_TIER).map(([key, val]) => (
+                          <OptionCard
+                            key={key}
+                            selected={form.design === key}
+                            onClick={() => setForm(f => ({ ...f, design: key }))}
+                            label={val.label}
+                            desc={val.desc}
+                            badge={key === 'premium' ? 'Más elegido' : key === 'elite' ? 'Wow factor' : null}
+                          />
+                        ))}
                       </div>
-                      <h4 className="text-lg font-extrabold text-slate-100 group-hover:text-white transition-colors mb-2 tracking-tight leading-snug">
-                        {p.title}
-                      </h4>
-                      <p className="text-xs text-slate-400 font-medium line-clamp-2 leading-relaxed">
-                        {p.description}
-                      </p>
                     </div>
+                  )}
 
-                    <button
-                      onClick={(e) => handleVote(p.id, e)}
-                      className="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-950/60 border border-slate-800 text-slate-400 hover:text-indigo-400 hover:border-indigo-800/40 hover:bg-indigo-950/10 transition-all duration-300 shrink-0 min-w-[64px] cursor-pointer"
-                    >
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mb-0.5">
-                        <polyline points="18 15 12 9 6 15"></polyline>
+                  {/* Step 2: Pages */}
+                  {step === 2 && (
+                    <div>
+                      <h3 className="text-xl font-black text-slate-800 mb-6">¿Cuántas páginas necesitas?</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {PAGES_RANGES.map((p) => (
+                          <OptionCard
+                            key={p.value}
+                            selected={form.pages === p.value}
+                            onClick={() => setForm(f => ({ ...f, pages: p.value }))}
+                            label={p.label}
+                            desc={p.value === 1 ? 'Landing page, home, about' : p.value === 2 ? 'Servicios, blog, contacto' : p.value === 3 ? 'Sitio corporativo completo' : 'E-commerce o portal'}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Step 3: SEO/AEO */}
+                  {step === 3 && (
+                    <div>
+                      <h3 className="text-xl font-black text-slate-800 mb-2">¿Qué nivel de visibilidad necesitas?</h3>
+                      <p className="text-sm text-slate-500 font-medium mb-6">
+                        AEO = visibilidad en ChatGPT, Perplexity y Google AI. El diferenciador de 2026.
+                      </p>
+                      <div className="grid grid-cols-1 gap-4">
+                        {Object.entries(SEO_TIER).map(([key, val]) => (
+                          <OptionCard
+                            key={key}
+                            selected={form.seo === key}
+                            onClick={() => setForm(f => ({ ...f, seo: key }))}
+                            label={val.label}
+                            desc={val.desc}
+                            price={val.price}
+                            badge={key === 'aeo' ? { text: 'Recomendado', icon: 'lightning' } : null}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Step 4: Add-ons */}
+                  {step === 4 && (
+                    <div>
+                      <h3 className="text-xl font-black text-slate-800 mb-2">¿Qué add-ons quieres incluir?</h3>
+                      <p className="text-sm text-slate-500 font-medium mb-6">Puedes seleccionar varios. Todos son opcionales.</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {ADDONS.map((addon) => (
+                          <OptionCard
+                            key={addon.id}
+                            selected={form.addons.includes(addon.id)}
+                            onClick={() => toggleAddon(addon.id)}
+                            label={addon.label}
+                            desc={addon.desc}
+                            price={addon.price}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Step 5: Retainer */}
+                  {step === 5 && (
+                    <div>
+                      <h3 className="text-xl font-black text-slate-800 mb-2">¿Quieres monitoreo continuo?</h3>
+                      <p className="text-sm text-slate-500 font-medium mb-6">
+                        Tu sitio puede mejorar mes a mes, no quedarse estático desde el día de entrega.
+                      </p>
+                      <div className="grid grid-cols-1 gap-4">
+                        {Object.entries(RETAINER).map(([key, val]) => (
+                          <OptionCard
+                            key={key}
+                            selected={form.retainer === key}
+                            onClick={() => setForm(f => ({ ...f, retainer: key }))}
+                            label={val.label}
+                            desc={val.desc}
+                            price={key !== 'none' ? val.price : undefined}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Navigation */}
+                <div className="flex items-center justify-between mt-10">
+                  <button
+                    onClick={() => step > 0 ? setStep(s => s - 1) : null}
+                    disabled={step === 0}
+                    className="btn-ghost text-slate-600 border-slate-200 disabled:opacity-30 cursor-pointer group flex items-center justify-center"
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <svg className="w-3 h-3 transition-transform group-hover:-translate-x-0.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M11.5 7H2.5M5.5 4L2.5 7L5.5 10" />
                       </svg>
-                      <span className="text-xs font-mono font-black leading-none">{p.votes}</span>
-                      <span className="text-[8px] font-mono uppercase font-bold tracking-widest mt-1 opacity-70">Apoyos</span>
+                      Atrás
+                    </span>
+                  </button>
+                  {step < STEPS.length - 1 ? (
+                    <button
+                      onClick={() => canGoNext() && setStep(s => s + 1)}
+                      disabled={!canGoNext()}
+                      className="btn-primary disabled:opacity-40 cursor-pointer group flex items-center justify-center"
+                    >
+                      <span className="flex items-center gap-1.5">
+                        Siguiente
+                        <svg className="w-3 h-3 transition-transform group-hover:translate-x-0.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M2.5 7H11.5M8.5 4L11.5 7L8.5 10" />
+                        </svg>
+                      </span>
                     </button>
+                  ) : (
+                    <button
+                      onClick={() => setResult(true)}
+                      className="btn-primary cursor-pointer group flex items-center justify-center"
+                    >
+                      <span className="flex items-center gap-1.5">
+                        Ver mi estimado
+                        <svg className="w-3 h-3 transition-transform group-hover:translate-x-0.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M2.5 7H11.5M8.5 4L11.5 7L8.5 10" />
+                        </svg>
+                      </span>
+                    </button>
+                  )}
+                </div>
+              </>
+            ) : (
+              /* ── Result screen ── */
+              <div>
+                <div className="text-center mb-10">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-mono font-bold mb-6">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Estimado listo
+                  </div>
+                  <h3 className="text-4xl font-black text-slate-900 mb-2">Tu inversión estimada</h3>
+                  <p className="text-slate-500 font-medium text-sm">Rango basado en tu configuración. El precio exacto se define en la auditoría.</p>
+                </div>
+
+                <div className="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-8 text-white text-center mb-8">
+                  <p className="text-sm font-mono font-bold uppercase tracking-widest text-indigo-200 mb-2">Proyecto único</p>
+                  <p className="text-6xl font-black tracking-tight mb-1">
+                    ${priceLow.toLocaleString()} — ${priceHigh.toLocaleString()}
+                  </p>
+                  <p className="text-indigo-200 text-sm font-bold">USD · Pago en hasta 3 partes</p>
+                  {price.retainer > 0 && (
+                    <div className="mt-4 pt-4 border-t border-indigo-500/40">
+                      <p className="text-sm font-mono font-bold text-indigo-200">+ ${price.retainer.toLocaleString()} USD/mes (retención)</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-2 mb-8">
+                  <p className="text-xs font-mono font-bold text-slate-500 uppercase tracking-widest mb-3">Desglose de tu selección</p>
+                  {[
+                    { label: 'Servicio base', val: SERVICE_BASE[form.service]?.label },
+                    { label: 'Nivel de diseño', val: DESIGN_TIER[form.design]?.label },
+                    { label: 'Páginas', val: PAGES_RANGES.find(p => p.value === form.pages)?.label },
+                    { label: 'Visibilidad', val: SEO_TIER[form.seo]?.label },
+                    { label: 'Add-ons', val: form.addons.length > 0 ? form.addons.map(id => ADDONS.find(a => a.id === id)?.label).join(', ') : '—' },
+                    { label: 'Retención mensual', val: RETAINER[form.retainer]?.label },
+                  ].map(item => (
+                    <div key={item.label} className="flex items-center justify-between py-2 border-b border-slate-100">
+                      <span className="text-xs font-bold text-slate-500">{item.label}</span>
+                      <span className="text-xs font-extrabold text-slate-800">{item.val}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <a href="#diagnostico" className="btn-primary justify-center flex-1">
+                    Agendar auditoría gratuita
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <path d="M2.5 7H11.5M8.5 4L11.5 7L8.5 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </a>
+                  <button
+                    onClick={() => { setResult(false); setStep(0); setForm({ service: '', design: 'premium', pages: 1, seo: 'basic', addons: [], retainer: 'none' }) }}
+                    className="btn-ghost cursor-pointer"
+                  >
+                    Recalcular
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* ── Sidebar: Live summary ── */}
+          <div className="lg:col-span-1 sticky top-24">
+            <div className="bg-slate-950 rounded-[2rem] p-8 text-white">
+              <p className="text-xs font-mono font-bold text-slate-500 uppercase tracking-widest mb-6">Resumen en vivo</p>
+
+              <div className="space-y-3 mb-8">
+                {[
+                  { label: 'Servicio', val: SERVICE_BASE[form.service]?.label ?? '—' },
+                  { label: 'Diseño', val: DESIGN_TIER[form.design]?.label ?? '—' },
+                  { label: 'Páginas', val: PAGES_RANGES.find(p => p.value === form.pages)?.label ?? '—' },
+                  { label: 'SEO/AEO', val: SEO_TIER[form.seo]?.label ?? '—' },
+                  { label: 'Add-ons', val: form.addons.length > 0 ? `${form.addons.length} seleccionados` : '—' },
+                  { label: 'Retención', val: RETAINER[form.retainer]?.label.split('—')[0].trim() ?? '—' },
+                ].map(item => (
+                  <div key={item.label} className="flex items-start justify-between gap-3 py-2 border-b border-slate-800/60">
+                    <span className="text-[10px] font-mono font-bold text-slate-600 uppercase tracking-widest shrink-0">{item.label}</span>
+                    <span className="text-xs font-bold text-slate-300 text-right">{item.val}</span>
                   </div>
                 ))}
               </div>
-            )}
-          </div>
 
-          {/* Right Panel: Create Proposal & Commission Calculator */}
-          <div className="lg:col-span-4 lg:sticky lg:top-28 flex flex-col gap-6">
-            
-            {/* Create Proposal Form */}
-            <div className="rounded-[2.5rem] bg-slate-900/40 border border-slate-800/60 p-6 backdrop-blur-xl shadow-2xl">
-              <h3 className="text-base font-extrabold text-white mb-4 tracking-tight">Propón un Asistente</h3>
-              <form onSubmit={handleCreateProposal} className="space-y-4">
-                <div>
-                  <label className="block text-[9px] font-mono font-bold text-slate-500 mb-1 uppercase tracking-wider">Título de Asistente</label>
-                  <input
-                    type="text"
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                    placeholder="Ej. Asistente para compras locales"
-                    required
-                    disabled={!user}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-500/50 transition-colors font-medium disabled:opacity-40"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[9px] font-mono font-bold text-slate-500 mb-1 uppercase tracking-wider">Categoría</label>
-                  <select
-                    value={newCat}
-                    onChange={(e) => setNewCat(e.target.value)}
-                    disabled={!user}
-                    className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 outline-none focus:border-indigo-500/50 transition-colors font-medium disabled:opacity-40"
-                  >
-                    <option value="Finanzas">Finanzas</option>
-                    <option value="Bienestar">Bienestar</option>
-                    <option value="Salud">Salud</option>
-                    <option value="Legal">Legal</option>
-                    <option value="Industrial">Industrial</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-[9px] font-mono font-bold text-slate-500 mb-1 uppercase tracking-wider">Descripción del Rol</label>
-                  <textarea
-                    value={newDesc}
-                    onChange={(e) => setNewDesc(e.target.value)}
-                    placeholder="¿Qué problema resuelve y qué tipo de datos necesita?"
-                    rows={3}
-                    required
-                    disabled={!user}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-500/50 transition-colors font-medium resize-none disabled:opacity-40"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={!user || !newTitle.trim() || !newDesc.trim()}
-                  className="btn-primary w-full justify-center text-xs py-3 shadow-md disabled:opacity-40"
-                >
-                  Publicar Propuesta
-                </button>
-
-                {!user && (
-                  <p className="text-[9px] font-mono font-bold text-slate-500 text-center mt-2">
-                    Inicia sesión en la parte superior para proponer asistentes.
+              {form.service && (
+                <div className="bg-indigo-600/10 border border-indigo-900/30 rounded-2xl p-4 text-center">
+                  <p className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest mb-1">Estimado actual</p>
+                  <p className="text-3xl font-black text-white">
+                    ${priceLow.toLocaleString()}
                   </p>
-                )}
-              </form>
-            </div>
-
-            {/* Commissions Calculator Card */}
-            <div className="rounded-[2.5rem] bg-indigo-950/20 border border-indigo-900/30 p-6 backdrop-blur-xl shadow-2xl">
-              <h3 className="text-base font-extrabold text-white mb-2 tracking-tight">Cálculo de Comisiones</h3>
-              <p className="text-xs text-slate-400 font-medium mb-4 leading-relaxed">
-                Estima tus ingresos mensuales participando en el desarrollo de asistentes bajo nuestro protocolo de reparto equitativo.
-              </p>
-
-              <div className="space-y-3.5 mb-5">
-                <div>
-                  <div className="flex justify-between items-center text-[10px] font-mono font-bold text-slate-500 mb-1 uppercase tracking-wider">
-                    <span>Usuarios Activos Proyectados</span>
-                    <span className="text-white text-xs font-bold font-sans">{projectedUsers}</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="100"
-                    max="5000"
-                    step="100"
-                    value={projectedUsers}
-                    onChange={(e) => setProjectedUsers(parseInt(e.target.value))}
-                    className="w-full accent-indigo-500 cursor-pointer bg-slate-950 rounded-lg h-1.5"
-                  />
+                  <p className="text-xs text-slate-400 font-bold">USD (rango mínimo)</p>
                 </div>
+              )}
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-slate-950/40 border border-slate-900 p-3.5 rounded-xl text-center">
-                    <span className="block text-[8px] font-mono font-bold text-slate-500 uppercase tracking-widest mb-1">Facturación Total</span>
-                    <span className="text-xs font-black text-slate-300">${monthlyRevenue.toLocaleString()} <span className="text-[9px] font-bold text-slate-400">MXN</span></span>
-                  </div>
-                  <div className="bg-slate-950/40 border border-slate-900 p-3.5 rounded-xl text-center">
-                    <span className="block text-[8px] font-mono font-bold text-slate-500 uppercase tracking-widest mb-1">Tu Ganancia (70%)</span>
-                    <span className="text-xs font-black text-emerald-400">${developerCut.toLocaleString()} <span className="text-[9px] font-bold text-emerald-500">MXN</span></span>
-                  </div>
+              {!form.service && (
+                <div className="text-center py-6">
+                  <p className="text-xs text-slate-600 font-bold">Selecciona un servicio para ver el estimado</p>
+                </div>
+              )}
+
+              <div className="mt-6 pt-6 border-t border-slate-800/60">
+                <div className="flex items-start gap-2 mb-2">
+                  <svg width="14" height="14" className="text-emerald-400 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  </svg>
+                  <p className="text-[10px] font-mono font-bold text-slate-500">
+                    Precios en USD. El precio exacto se confirma en la auditoría gratuita de 30 minutos.
+                  </p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <svg width="14" height="14" className="text-indigo-400 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  <p className="text-[10px] font-mono font-bold text-slate-500">
+                    Pagos en hasta 3 partes. Primer pago al inicio del proyecto.
+                  </p>
                 </div>
               </div>
-
-              <div className="text-[10px] font-mono font-bold text-slate-400 leading-relaxed text-center">
-                *Cálculo basado en un precio sugerido de $200 MXN mensuales por asistente activo.
-              </div>
             </div>
-
           </div>
+
         </div>
       </div>
-
-      {/* Application Form Modal */}
-      {isApplying && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
-          <div className="w-full max-w-md rounded-3xl bg-slate-900 border border-slate-800 p-8 shadow-2xl relative">
-            <button
-              onClick={() => setIsApplying(false)}
-              className="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-
-            {applySuccess ? (
-              <div className="text-center py-10 flex flex-col items-center">
-                <div className="w-16 h-16 rounded-full bg-emerald-900/30 border border-emerald-600/30 flex items-center justify-center text-emerald-400 mb-6">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                </div>
-                <h4 className="text-xl font-extrabold text-white mb-2">Postulación Recibida</h4>
-                <p className="text-xs text-slate-300 font-medium max-w-sm mx-auto leading-relaxed">
-                  Hemos registrado tu interés en el desarrollo conjunto. En breve nos comunicaremos a tu correo para comenzar con las pruebas del sandbox de comisiones.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleApplySubmit} className="space-y-4">
-                <h3 className="text-lg font-black text-white tracking-tight mb-2">Postulación a Co-Desarrollo</h3>
-                <p className="text-xs text-slate-400 font-medium leading-relaxed mb-4">
-                  Regístrate para colaborar en la construcción lógica de **{activeProposal?.title}** e intégralo en el sandbox oficial.
-                </p>
-
-                <div>
-                  <label className="block text-[9px] font-mono font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Tu Nombre</label>
-                  <input
-                    type="text"
-                    value={applyName}
-                    onChange={(e) => setApplyName(e.target.value)}
-                    placeholder="Tu nombre completo"
-                    required
-                    className="w-full px-4 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-500/50 transition-colors font-medium"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[9px] font-mono font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Tu Rol Especialidad</label>
-                  <select
-                    value={applyRole}
-                    onChange={(e) => setApplyRole(e.target.value)}
-                    className="w-full px-3 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-slate-300 outline-none focus:border-indigo-500/50 transition-colors font-medium"
-                  >
-                    <option value="Desarrollador de IA">Desarrollador de IA (LLM/FineTuning)</option>
-                    <option value="Experto de Dominio">Experto de Dominio / Consultor Temático</option>
-                    <option value="Diseñador de Interacción">Diseñador de Interacción y UX</option>
-                    <option value="Ambos / Generalist">Ambos / Ingeniero FullStack</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[9px] font-mono font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Repositorio / Portafolio Link</label>
-                  <input
-                    type="url"
-                    placeholder="https://github.com/tu-usuario"
-                    required
-                    className="w-full px-4 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-500/50 transition-colors font-medium"
-                  />
-                </div>
-
-                <div className="bg-slate-950/40 p-4 border border-slate-900 rounded-2xl flex justify-between items-center">
-                  <div>
-                    <span className="block text-[8px] font-mono font-bold text-slate-500 uppercase tracking-widest">Comisión de Regalías</span>
-                    <span className="text-xs font-black text-white">70% de la facturación modular</span>
-                  </div>
-                  <span className="text-[10px] text-emerald-400 font-mono font-extrabold border border-emerald-900/35 bg-emerald-950/10 px-2 py-0.5 rounded">Aprobado</span>
-                </div>
-
-                <button
-                  type="submit"
-                  className="btn-primary w-full justify-center text-xs py-3.5 shadow-lg"
-                >
-                  Enviar Postulación
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
-    </section>
+    </div>
+  </div>
+</section>
   )
 }

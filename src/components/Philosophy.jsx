@@ -4,11 +4,23 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const PARADIGMS = [
-  { title: "Ecosistema Descentralizado", text: "No creamos todos los asistentes de manera interna. Expertos reales —como contadores, médicos o ingenieros— entrenan a sus propios agentes dentro de nuestro protocolo y los publican en el marketplace." },
-  { title: "Tus Datos, tu Inteligencia", text: "Tu historial financiero, médico o de hábitos no pertenece a una corporación. Se almacena y procesa con cifrado de grado militar para entrenar tu perfil personal, haciendo que tus asistentes se vuelvan más precisos con el tiempo." },
-  { title: "Estándar de Calidad Riguroso", text: "Evitamos el ruido de los chatbots genéricos. Cada agente listado en el catálogo pasa por una auditoría técnica estricta: evaluamos su consistencia lógica, tono, seguridad y estructura de interacción." },
-  { title: "Monetización Modular", text: "Eliminamos las suscripciones planas obligatorias. Cada asistente tiene un costo mensual independiente. Activa únicamente los que necesitas hoy y apaga los que dejes de utilizar sin plazos forzosos." }
+const DIFFERENTIATORS = [
+  {
+    title: "La trinidad completa",
+    text: "Unimos lo que otros dividen: diseño de alto impacto, velocidad de carga óptima y visibilidad en buscadores tradicionales y de IA."
+  },
+  {
+    title: "Diseño con intención",
+    text: "Cada decisión estética responde a un objetivo de conversión. El primer impacto visual define la confianza en tu marca en solo 50ms."
+  },
+  {
+    title: "Optimización AEO",
+    text: "Estructuramos semánticamente tu contenido para que motores de IA como ChatGPT y Perplexity te recomienden como primera opción."
+  },
+  {
+    title: "Resultados medibles",
+    text: "Entregamos mejoras auditables en PageSpeed, SEO y conversión en 30 días, con checkpoints y reportes de avance semanales."
+  }
 ]
 
 export default function Philosophy() {
@@ -39,7 +51,7 @@ export default function Philosophy() {
 
       const items = gsap.utils.toArray('.philosophy-item')
       items.forEach((item) => {
-        gsap.fromTo(item, 
+        gsap.fromTo(item,
           { opacity: 0.2, scale: 0.95 },
           { opacity: 1, scale: 1, duration: 0.8,
             scrollTrigger: {
@@ -56,25 +68,36 @@ export default function Philosophy() {
   }, [])
 
   return (
-    <section id="filosofia" ref={comp} className="relative px-6 py-32 md:py-48 bg-slate-950 text-white border-t border-slate-900">
+    <section id="filosofia" ref={comp} data-theme="dark" className="relative px-6 py-16 md:py-24 text-white">
       <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row gap-20 items-start">
-        
+
         <div className="w-full md:w-1/2 relative h-full">
           <div ref={leftCol} className="md:h-screen flex flex-col justify-center">
+            <span className="tag mb-6 text-indigo-400">Por qué dashvert</span>
             <h2 className="philosophy-title text-[clamp(3.5rem,6vw,6rem)] font-black text-white leading-[0.9] tracking-tighter mb-4 max-w-5xl">
-              Inteligencia experta, a tu medida.
+              Diseño con intención. Código con propósito.
             </h2>
             <p className="philosophy-desc text-xl text-slate-300 font-medium max-w-md">
-              Reimaginamos el acceso al conocimiento especializado. Nex2u estructura la inteligencia de la comunidad para poner un comité de asesores a tu lado, 24/7.
+              No construimos sitios bonitos. Construimos sistemas de conversión que se ven increíbles, cargan en menos de 2 segundos y aparecen en Google y en ChatGPT.
             </p>
+            <a href="#diagnostico" className="btn-primary mt-8 self-start">
+              Agendar auditoría gratuita
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2.5 7H11.5M8.5 4L11.5 7L8.5 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </a>
           </div>
         </div>
 
         <div ref={rightCol} className="w-full md:w-1/2 flex flex-col pt-[10vh] pb-[10vh] md:pt-[50vh] md:pb-[50vh] gap-16">
-          {PARADIGMS.map((p, i) => (
+          {DIFFERENTIATORS.map((d, i) => (
             <div key={i} className="philosophy-item">
-              <h3 className="text-3xl md:text-5xl font-black text-white tracking-tight mb-4">{p.title}</h3>
-              <p className="text-xl text-slate-300 font-medium leading-relaxed">{p.text}</p>
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-xs font-mono font-bold text-slate-600">0{i + 1}</span>
+                <div className="h-px flex-1 bg-slate-800" />
+              </div>
+              <h3 className="text-3xl md:text-5xl font-black text-white tracking-tight mb-4">{d.title}</h3>
+              <p className="text-xl text-slate-300 font-medium leading-relaxed">{d.text}</p>
             </div>
           ))}
         </div>

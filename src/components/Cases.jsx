@@ -36,7 +36,7 @@ const CASES = [
     company: 'Portal de Creadores',
     metric: 'Comunidad',
     metricLabel: 'Crea tu Asistente',
-    description: '¿No encuentras lo que buscas? Registra y entrena a tu propio experto para compartirlo con la red de inteligencia de Nex2u.',
+    description: '¿No encuentras lo que buscas? Registra y entrena a tu propio experto para compartirlo con la red de inteligencia de dashvert.',
     bg: 'bg-slate-200',
     text: 'text-slate-900',
     descText: 'text-slate-800'

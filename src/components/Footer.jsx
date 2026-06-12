@@ -42,13 +42,13 @@ export default function Footer() {
                 <span className="text-gradient">Sin costo.</span>
               </h2>
               <p className="text-slate-700 leading-relaxed mb-6 font-semibold text-sm max-w-sm">
-                Inicia con Nex2u. Crea tu cuenta, selecciona tus asistentes y delega la fricción de inmediato.
+                Cuéntanos sobre tu sitio actual. En 30 minutos identificamos exactamente qué está frenando tu conversión y te proponemos cómo solucionarlo.
               </p>
               <ul className="space-y-2.5 text-xs text-slate-700 font-bold">
                 {[
-                  'Selección modular de asistentes especializados',
-                  'Respuestas inmediatas y 100% privadas',
-                  'Sin rentas fijas: activa o desactiva en un clic',
+                  'Diagnóstico de velocidad, SEO y conversión sin costo',
+                  'Propuesta detallada sin paquetes genéricos',
+                  'Resultados medibles desde el primer mes',
                 ].map(item => (
                   <li key={item} className="flex items-start gap-2.5">
                     <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center bg-indigo-50 border border-indigo-200">
@@ -70,19 +70,19 @@ export default function Footer() {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
           <div className="col-span-2">
-            <span className="font-display font-extrabold text-[21px] tracking-[-0.03em] text-slate-900 leading-none select-none block mb-5">
-              Nex<span className="text-gradient">2u</span>
+            <span className="font-sans font-black text-[22px] tracking-[-0.04em] text-slate-900 leading-none select-none block mb-5 lowercase">
+              dash<span className="text-violet-600">vert</span>
             </span>
             <p className="text-xs font-bold text-slate-600 leading-relaxed max-w-xs">
-              Hub de asistentes personales impulsado por inteligencia artificial comunitaria.
+              Agencia de diseño web que convierte. Diseño de alto impacto + CRO + velocidad + SEO + AEO.
             </p>
-            <a href="mailto:hello@nex2u.ai" className="mt-4 block text-xs text-plasma hover:text-indigo-700 transition-colors font-mono font-bold">
-              hello@nex2u.ai
+            <a href="mailto:hello@dashvert.co" className="mt-4 block text-xs text-plasma hover:text-indigo-700 transition-colors font-mono font-bold">
+              hello@dashvert.co
             </a>
           </div>
           {[
-            { title: 'Plataforma', links: ['Asistentes', 'Portal Creadores', 'Planes'] },
-            { title: 'Legal', links: ['Privacidad', 'Términos'] },
+            { title: 'Servicios', links: ['Diseño Visual', 'Velocidad & Core Web Vitals', 'SEO + AEO', 'Calculadora'] },
+            { title: 'Legal', links: ['Privacidad', 'Términos', 'Política de cookies'] },
           ].map(col => (
             <div key={col.title}>
               <p className="text-xs font-mono font-extrabold uppercase tracking-widest text-slate-500 mb-4">{col.title}</p>
@@ -100,9 +100,9 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-slate-200">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500" style={{ boxShadow: '0 0 8px #10b981' }} />
-            <span className="text-xs font-mono font-extrabold text-slate-600">Asistentes en línea 24/7</span>
+            <span className="text-xs font-mono font-extrabold text-slate-600">Aceptando nuevos proyectos</span>
           </div>
-          <p className="text-xs font-mono font-extrabold text-slate-500">Hecho con amor para Sergio</p>
+          <p className="text-xs font-mono font-extrabold text-slate-500">© 2026 dashvert — Diseño web que genera negocio</p>
         </div>
 
       </div>

@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 
 const INTERESTS = [
-  'Finanzas & Impuestos',
-  'Salud & Bienestar',
-  'Legal & Seguros',
-  'Optimización Industrial',
-  'Crear mi propio asistente',
+  'Auditoría + Diagnóstico',
+  'Optimización de velocidad',
+  'Rediseño de sitio',
+  'Sitio nuevo desde cero',
+  'SEO + AEO',
 ]
 
 const FORMSPREE_ID  = 'xwvzrrrv'
@@ -78,6 +78,7 @@ function CalEmbed({ link }) {
 export default function DiagnosisForm() {
   const [step, setStep]   = useState('form')
   const [error, setError] = useState('')
+  const [privacyOk, setPrivacyOk] = useState(false)
   const [form, setForm]   = useState({
     nombre: '', empresa: '', email: '', interes: '', mensaje: '',
   })
@@ -86,7 +87,8 @@ export default function DiagnosisForm() {
 
   const submit = async e => {
     e.preventDefault()
-    if (!form.interes) { setError('Elige el área que te interesa.'); return }
+    if (!form.interes) { setError('Elige el servicio que te interesa.'); return }
+    if (!privacyOk) { setError('Acepta la política de privacidad para continuar.'); return }
     setError(''); setStep('loading')
     try {
       const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
@@ -169,10 +171,25 @@ export default function DiagnosisForm() {
           rows={3}
           value={form.mensaje}
           onChange={set}
-          placeholder="¿Qué tarea tediosa o problema te gustaría delegar a nuestros agentes?"
+          placeholder="¿Qué problema tiene tu sitio actual? ¿Qué resultado buscas lograr?"
           style={{ ...inputStyle, resize: 'none' }}
         />
       </Field>
+
+      {/* Privacy checkbox — GDPR */}
+      <div className="mt-4 flex items-start gap-3">
+        <input
+          type="checkbox"
+          id="privacy-check"
+          checked={privacyOk}
+          onChange={e => setPrivacyOk(e.target.checked)}
+          className="mt-0.5 w-4 h-4 rounded accent-indigo-600 cursor-pointer flex-shrink-0"
+        />
+        <label htmlFor="privacy-check" className="text-[10px] font-mono font-bold text-slate-500 leading-relaxed cursor-pointer">
+          Acepto que dashvert almacene mis datos para contactarme sobre este servicio.{' '}
+          <a href="#" className="text-indigo-500 hover:underline">Política de privacidad</a>.
+        </label>
+      </div>
 
       {error && (
         <p className="mt-3 text-xs text-red-500 font-mono font-bold">{error}</p>

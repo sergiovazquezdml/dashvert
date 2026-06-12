@@ -18,7 +18,7 @@
   body {
     background-color: #FFFFFF;
     color: #1E293B;
-    font-family: 'Kumbh Sans', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-optical-sizing: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -37,9 +37,9 @@
   ::-webkit-scrollbar-thumb { background: rgba(79, 70, 229, 0.25); border-radius: 3px; }
 
   h1, h2, h3, h4 {
-    font-family: 'Outfit', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-weight: 800;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.04em;
     color: #0F172A;
   }
 
@@ -124,16 +124,32 @@
   /* Section spacing — REDUCED */
   .section-pad { padding: clamp(3rem,5vw,5rem) clamp(1.5rem,5vw,5rem); }
 
-  /* Mono tag style */
+  /* Tag style updated to Plus Jakarta Sans for better legibility */
   .tag {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.12em;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: #4F46E5;
-    font-weight: 700;
+    font-weight: 800;
+  }
+
+  /* Premium Fade In Slide Animation */
+  .animate-fade-in-slide {
+    animation: fadeInSlide 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

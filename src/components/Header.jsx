@@ -2,35 +2,70 @@ import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 
 const NAV = [
-  { label: 'Catálogo',    href: '#catalogo' },
-  { label: 'Metodología', href: '#proceso' },
-  { label: 'Valores',     href: '#filosofia' },
+  { label: 'Servicios',    href: '#servicios' },
+  { label: 'Proceso',      href: '#proceso' },
+  { label: 'Calculadora',  href: '#calculadora' },
 ]
 
 function Logo() {
   return (
-    <a href="/" aria-label="Nex2u" className="flex items-center gap-3 shrink-0 group">
-      {/* Icon mark */}
-      <div
-        className="w-10 h-10 rounded-[12px] flex items-center justify-center flex-shrink-0 transition-transform duration-350 group-hover:scale-95 shadow-sm"
-        style={{ background: 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%)' }}
-      >
-        <svg width="20" height="20" viewBox="0 0 18 18" fill="none">
-          <path d="M3.5 5.5L8.5 9L3.5 12.5" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M9 5.5L14 9L9 12.5"       stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <a href="/" aria-label="dashvert" className="flex items-center gap-3 shrink-0 group">
+      {/* Isotipo: Pastilla (Cápsula) en corte diagonal con desfase. En hover se integran en una sola pastilla */}
+      <div className="flex items-center justify-center flex-shrink-0 transition-all duration-500 ease-out group-hover:drop-shadow-[0_0_12px_rgba(79,70,229,0.95)]">
+        <svg width="54" height="30" viewBox="0 0 54 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="leftGrad" x1="0" y1="0" x2="36" y2="30" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#6366F1" />
+              <stop offset="1" stopColor="#4338CA" />
+            </linearGradient>
+            <linearGradient id="rightGrad" x1="18" y1="0" x2="54" y2="30" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#3730A3" />
+              <stop offset="1" stopColor="#1E1B4B" />
+            </linearGradient>
+          </defs>
+
+          {/* Mitad izquierda: Gradiente Indigo vibrante, corte diagonal pronunciado */}
+          <g className="transform translate-x-[-4px] translate-y-[-3px] group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+            <path
+              d="M 18 4 H 15 A 11 11 0 0 0 15 26 H 36 Z"
+              fill="url(#leftGrad)"
+              className="transition-opacity duration-300 group-hover:opacity-90"
+            />
+            {/* Letra 'd' con tipografía del sistema */}
+            <text x="15" y="20.5" fill="#FFFFFF" fontSize="16" fontFamily="Plus Jakarta Sans, system-ui, sans-serif" fontWeight="900" textAnchor="middle">d</text>
+          </g>
+
+          {/* Mitad derecha: Gradiente Indigo oscuro */}
+          <g className="transform translate-x-[4px] translate-y-[3px] group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+            <path
+              d="M 18 4 L 36 26 H 39 A 11 11 0 0 0 39 4 Z"
+              fill="url(#rightGrad)"
+              className="transition-opacity duration-300 group-hover:opacity-95"
+            />
+            {/* Letra 'v' con tipografía del sistema */}
+            <text x="39" y="20.5" fill="#FFFFFF" fontSize="16" fontFamily="Plus Jakarta Sans, system-ui, sans-serif" fontWeight="900" textAnchor="middle">v</text>
+          </g>
         </svg>
       </div>
-      {/* Wordmark */}
-      <span className="font-display font-black text-[22px] tracking-[-0.03em] text-slate-900 leading-none select-none">
-        Nex<span className="text-gradient font-black">2u</span>
+
+      {/* Wordmark adaptado a la tipografía del título ('Plus Jakarta Sans', black/extrabold, tracking-tighter) con 'vert' en indigo */}
+      <span className="font-sans font-black text-[22px] tracking-[-0.04em] text-slate-900 dark:text-white leading-none select-none transition-all duration-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 group-hover:drop-shadow-[0_0_6px_rgba(79,70,229,0.35)] lowercase">
+        <span className="hidden sm:inline">
+          dash<span className="text-indigo-600 dark:text-indigo-400 group-hover:text-indigo-500">vert</span>
+        </span>
+        <span className="inline sm:hidden">
+          d<span className="text-indigo-600 dark:text-indigo-400 group-hover:text-indigo-500">v</span>
+        </span>
       </span>
     </a>
   )
 }
 
-export default function Header({ user, onOpenLogin, onLogout }) {
+export default function Header() {
   const ref = useRef(null)
   const [scrolled, setScrolled] = useState(false)
+  const [hidden, setHidden] = useState(false)
+  const lastScrollY = useRef(0)
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -38,29 +73,30 @@ export default function Header({ user, onOpenLogin, onLogout }) {
       { y: -80, opacity: 0 },
       { y: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.1 }
     )
-    const fn = () => setScrolled(window.scrollY > 24)
+    const fn = () => {
+      const currentScrollY = window.scrollY
+      setScrolled(currentScrollY > 24)
+      
+      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+        setHidden(true)
+      } else if (currentScrollY < lastScrollY.current) {
+        setHidden(false)
+      }
+      lastScrollY.current = currentScrollY
+    }
     window.addEventListener('scroll', fn, { passive: true })
     return () => window.removeEventListener('scroll', fn)
   }, [])
 
   return (
-    <header ref={ref} className="fixed top-0 inset-x-0 z-50 flex justify-center px-4 pt-4">
+    <header 
+      ref={ref} 
+      className={`fixed top-0 inset-x-0 z-50 flex justify-center px-4 pt-4 transition-transform duration-500 ease-out ${hidden ? '-translate-y-[150%]' : 'translate-y-0'}`}
+    >
       <nav
-        className={`flex items-center justify-between gap-8 px-6 py-4 rounded-full transition-all duration-500 ${
-          scrolled
-            ? 'shadow-lg shadow-slate-100/60'
-            : ''
-        }`}
+        className={`flex items-center justify-between gap-8 px-6 py-4 rounded-full w-full transition-all duration-300 ${scrolled ? 'bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-white/20 dark:border-slate-700/30 shadow-sm' : 'bg-transparent border-transparent'}`}
         style={{
           width: 'min(1150px, calc(100vw - 2rem))',
-          background: scrolled
-            ? 'rgba(255, 255, 255, 0.92)'
-            : 'rgba(255, 255, 255, 0.55)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
-          border: scrolled
-            ? '1px solid rgba(79, 70, 229, 0.1)'
-            : '1px solid rgba(79, 70, 229, 0.05)',
         }}
       >
         <Logo />
@@ -83,39 +119,30 @@ export default function Header({ user, onOpenLogin, onLogout }) {
         </ul>
 
         {/* CTA */}
-        {user ? (
-          <button
-            onClick={onLogout}
-            className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-extrabold shrink-0 border border-slate-200/80 text-slate-700 bg-slate-50/50 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors cursor-pointer"
-          >
-            <span>{user.name.split(' ')[0]} (Cerrar Sesión)</span>
-          </button>
-        ) : (
-          <button
-            onClick={onOpenLogin}
-            className="hidden md:inline-flex items-center gap-2.5 px-5.5 py-2.5 rounded-full text-[13px] font-extrabold shrink-0 transition-all duration-250 shadow-sm cursor-pointer"
-            style={{
-              background: 'rgba(79, 70, 229, 0.08)',
-              border: '1px solid rgba(79, 70, 229, 0.25)',
-              color: '#4F46E5',
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background = 'linear-gradient(135deg, #4F46E5, #7C3AED)'
-              e.currentTarget.style.color = '#FFFFFF'
-              e.currentTarget.style.borderColor = 'transparent'
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background = 'rgba(79, 70, 229, 0.08)'
-              e.currentTarget.style.color = '#4F46E5'
-              e.currentTarget.style.borderColor = 'rgba(79, 70, 229, 0.25)'
-            }}
-          >
-            Acceder al Hub
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M2 6H10M7.5 3.5L10 6L7.5 8.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-        )}
+        <a
+          href="#diagnostico"
+          className="hidden md:inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full text-[13px] font-extrabold shrink-0 transition-all duration-250 shadow-sm cursor-pointer"
+          style={{
+            background: 'rgba(79, 70, 229, 0.08)',
+            border: '1px solid rgba(79, 70, 229, 0.25)',
+            color: '#4F46E5',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, #4F46E5, #7C3AED)'
+            e.currentTarget.style.color = '#FFFFFF'
+            e.currentTarget.style.borderColor = 'transparent'
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = 'rgba(79, 70, 229, 0.08)'
+            e.currentTarget.style.color = '#4F46E5'
+            e.currentTarget.style.borderColor = 'rgba(79, 70, 229, 0.25)'
+          }}
+        >
+          Auditoría gratuita
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M2 6H10M7.5 3.5L10 6L7.5 8.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </a>
 
         {/* Mobile toggle */}
         <button
@@ -157,15 +184,9 @@ export default function Header({ user, onOpenLogin, onLogout }) {
               {n.label}
             </a>
           ))}
-          {user ? (
-            <button onClick={() => { onLogout(); setOpen(false) }} className="btn-primary justify-center mt-3 cursor-pointer">
-              Cerrar Sesión ({user.name.split(' ')[0]})
-            </button>
-          ) : (
-            <button onClick={() => { onOpenLogin(); setOpen(false) }} className="btn-primary justify-center mt-3 cursor-pointer">
-              Acceder al Hub →
-            </button>
-          )}
+          <a href="#diagnostico" onClick={() => setOpen(false)} className="btn-primary justify-center mt-3 cursor-pointer">
+            Auditoría gratuita →
+          </a>
         </div>
       )}
     </header>
