@@ -99,7 +99,7 @@ export default function DiagnosisForm() {
       if (res.ok) { setStep('calendar') }
       else { throw new Error() }
     } catch {
-      setError('Algo salió mal. Escríbenos a hello@impulsai.mx')
+      setError('Algo salió mal. Escríbenos a hello@dashvert.co')
       setStep('form')
     }
   }

@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 const NAV = [
-  { label: 'Servicios',    href: '#servicios' },
-  { label: 'Proceso',      href: '#proceso' },
-  { label: 'Calculadora',  href: '#calculadora' },
+  { label: 'Servicios',    href: '#servicios', isAnchor: true },
+  { label: 'Proceso',      href: '#proceso', isAnchor: true },
+  { label: 'Calculadora',  href: '#calculadora', isAnchor: true },
+  { label: 'Sobre nosotros', href: '/about' },
+  { label: 'Comunidad',    href: '/community' }
 ]
 
 function Logo() {
   return (
-    <a href="/" aria-label="dashvert" className="flex items-center gap-3 shrink-0 group">
+    <Link to="/" aria-label="dashvert" className="flex items-center gap-3 shrink-0 group">
       {/* Isotipo: Pastilla (Cápsula) en corte diagonal con desfase. En hover se integran en una sola pastilla */}
       <div className="flex items-center justify-center flex-shrink-0 transition-all duration-500 ease-out group-hover:drop-shadow-[0_0_12px_rgba(79,70,229,0.95)]">
         <svg width="54" height="30" viewBox="0 0 54 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -57,7 +60,7 @@ function Logo() {
           d<span className="text-indigo-600 dark:text-indigo-400 group-hover:text-indigo-500">v</span>
         </span>
       </span>
-    </a>
+    </Link>
   )
 }
 
@@ -67,6 +70,33 @@ export default function Header() {
   const [hidden, setHidden] = useState(false)
   const lastScrollY = useRef(0)
   const [open, setOpen] = useState(false)
+
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const handleNavClick = (e, href) => {
+    const targetId = href.substring(1)
+    if (location.pathname !== '/') {
+      e.preventDefault()
+      navigate('/' + href)
+    } else {
+      e.preventDefault()
+      const el = document.getElementById(targetId)
+      if (el) el.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
+  useEffect(() => {
+    if (location.hash) {
+      const targetId = location.hash.substring(1)
+      setTimeout(() => {
+        const el = document.getElementById(targetId)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' })
+        }
+      }, 150)
+    }
+  }, [location])
 
   useEffect(() => {
     gsap.fromTo(ref.current,
@@ -108,12 +138,22 @@ export default function Header() {
         <ul className="hidden md:flex items-center gap-2 list-none flex-1">
           {NAV.map(n => (
             <li key={n.label}>
-              <a
-                href={n.href}
-                className="px-4 py-2.5 rounded-full text-[15px] font-bold text-slate-700 hover:text-indigo-600 transition-colors duration-200 tracking-tight hover:bg-indigo-50/50"
-              >
-                {n.label}
-              </a>
+              {n.isAnchor ? (
+                <a
+                  href={n.href}
+                  onClick={(e) => handleNavClick(e, n.href)}
+                  className="px-4 py-2.5 rounded-full text-[15px] font-bold text-slate-700 hover:text-indigo-600 transition-colors duration-200 tracking-tight hover:bg-indigo-50/50"
+                >
+                  {n.label}
+                </a>
+              ) : (
+                <Link
+                  to={n.href}
+                  className="px-4 py-2.5 rounded-full text-[15px] font-bold text-slate-700 hover:text-indigo-600 transition-colors duration-200 tracking-tight hover:bg-indigo-50/50"
+                >
+                  {n.label}
+                </Link>
+              )}
             </li>
           ))}
         </ul>
@@ -121,6 +161,7 @@ export default function Header() {
         {/* CTA */}
         <a
           href="#diagnostico"
+          onClick={(e) => handleNavClick(e, '#diagnostico')}
           className="hidden md:inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full text-[13px] font-extrabold shrink-0 transition-all duration-250 shadow-sm cursor-pointer"
           style={{
             background: 'rgba(79, 70, 229, 0.08)',
@@ -175,16 +216,27 @@ export default function Header() {
           }}
         >
           {NAV.map(n => (
-            <a
-              key={n.label}
-              href={n.href}
-              className="text-lg font-extrabold text-slate-800 hover:text-indigo-600 transition-colors py-2.5 px-2 border-b border-slate-100 last:border-0"
-              onClick={() => setOpen(false)}
-            >
-              {n.label}
-            </a>
+            n.isAnchor ? (
+              <a
+                key={n.label}
+                href={n.href}
+                className="text-lg font-extrabold text-slate-800 hover:text-indigo-600 transition-colors py-2.5 px-2 border-b border-slate-100 last:border-0"
+                onClick={(e) => { setOpen(false); handleNavClick(e, n.href); }}
+              >
+                {n.label}
+              </a>
+            ) : (
+              <Link
+                key={n.label}
+                to={n.href}
+                className="text-lg font-extrabold text-slate-800 hover:text-indigo-600 transition-colors py-2.5 px-2 border-b border-slate-100 last:border-0"
+                onClick={() => setOpen(false)}
+              >
+                {n.label}
+              </Link>
+            )
           ))}
-          <a href="#diagnostico" onClick={() => setOpen(false)} className="btn-primary justify-center mt-3 cursor-pointer">
+          <a href="#diagnostico" onClick={(e) => { setOpen(false); handleNavClick(e, '#diagnostico'); }} className="btn-primary justify-center mt-3 cursor-pointer">
             Auditoría gratuita →
           </a>
         </div>

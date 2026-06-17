@@ -66,7 +66,7 @@ export default function Protocol() {
       <div className="w-full max-w-7xl mx-auto">
 
         <span className="tag mb-6 block text-indigo-400">Cómo trabajamos</span>
-        <h2 className="protocol-title text-[clamp(3rem,5vw,5.5rem)] font-black text-white leading-[0.9] tracking-tighter mb-4 w-full max-w-6xl drop-shadow-lg">
+        <h2 className="protocol-title text-[clamp(2.2rem,5vw,5.5rem)] font-black text-white leading-[0.9] tracking-tighter mb-4 w-full max-w-6xl drop-shadow-lg">
           De sitio olvidado a máquina de conversión.
         </h2>
         <p className="protocol-title text-xl text-slate-300 font-medium mb-16 max-w-2xl">

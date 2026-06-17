@@ -15,7 +15,7 @@ const DIFFERENTIATORS = [
   },
   {
     title: "Optimización AEO",
-    text: "Estructuramos semánticamente tu contenido para que motores de IA como ChatGPT y Perplexity te recomienden como primera opción."
+    text: "Estructuramos técnicamente tu contenido para que motores de IA y asistentes como ChatGPT, Gemini y Claude te recomienden como la opción ideal."
   },
   {
     title: "Resultados medibles",
@@ -30,12 +30,16 @@ export default function Philosophy() {
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      ScrollTrigger.create({
-        trigger: comp.current,
-        start: 'top top',
-        end: 'bottom bottom',
-        pin: leftCol.current,
-        pinSpacing: false
+      let mm = gsap.matchMedia()
+
+      mm.add("(min-width: 768px)", () => {
+        ScrollTrigger.create({
+          trigger: comp.current,
+          start: 'top top',
+          end: 'bottom bottom',
+          pin: leftCol.current,
+          pinSpacing: false
+        })
       })
 
       gsap.fromTo('.philosophy-title',
@@ -74,7 +78,7 @@ export default function Philosophy() {
         <div className="w-full md:w-1/2 relative h-full">
           <div ref={leftCol} className="md:h-screen flex flex-col justify-center">
             <span className="tag mb-6 text-indigo-400">Por qué dashvert</span>
-            <h2 className="philosophy-title text-[clamp(3.5rem,6vw,6rem)] font-black text-white leading-[0.9] tracking-tighter mb-4 max-w-5xl">
+            <h2 className="philosophy-title text-[clamp(2.2rem,6vw,6rem)] font-black text-white leading-[0.9] tracking-tighter mb-4 max-w-5xl">
               Diseño con intención. Código con propósito.
             </h2>
             <p className="philosophy-desc text-xl text-slate-300 font-medium max-w-md">

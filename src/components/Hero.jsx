@@ -31,7 +31,7 @@ export default function Hero() {
       {/* No blobs needed — AmbientBackground handles it */}
 
       <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center text-center">
-        <h1 className="font-black tracking-tighter leading-[0.95] text-[clamp(3.5rem,7.5vw,7.5rem)] mb-16 w-full text-center">
+        <h1 className="font-black tracking-tighter leading-[0.95] text-[clamp(2.2rem,7.5vw,7.5rem)] mb-16 w-full text-center">
           <div className="overflow-hidden pb-8 -mb-5">
             <div className="inline-flex flex-wrap justify-center">
               {line1.split('').map((char, i) => (

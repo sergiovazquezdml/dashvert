@@ -22,7 +22,7 @@ const SEO_TIER = {
   none:     { label: 'Ninguno',        price: 0,    desc: 'Sin SEO en este proyecto' },
   basic:    { label: 'SEO básico',     price: 800,  desc: 'Meta tags, schema, sitemap, URLs limpias' },
   advanced: { label: 'SEO avanzado',   price: 1800, desc: 'Todo el básico + keyword research + linkbuilding' },
-  aeo:      { label: 'SEO + AEO',      price: 2800, desc: 'SEO completo + optimización para ChatGPT, Perplexity, Gemini' },
+  aeo:      { label: 'SEO + AEO',      price: 2800, desc: 'SEO completo + optimización para ChatGPT, Gemini y Claude' },
 }
 
 const ADDONS = [
@@ -189,7 +189,7 @@ export default function CreatorsForum() {
           <div className="relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <span className="tag mb-4 text-indigo-600">Calculadora de inversión</span>
-              <h2 className="calc-title text-[clamp(2.5rem,4.5vw,4.5rem)] font-black leading-tight tracking-tighter mb-4 text-slate-900">
+              <h2 className="calc-title text-[clamp(2rem,4.5vw,4.5rem)] font-black leading-tight tracking-tighter mb-4 text-slate-900">
                 Cuánto cuesta mejorar tu sitio
               </h2>
               <p className="text-lg text-slate-500 font-medium">
@@ -267,7 +267,7 @@ export default function CreatorsForum() {
                     <div>
                       <h3 className="text-xl font-black text-slate-800 mb-2">¿Qué nivel de visibilidad necesitas?</h3>
                       <p className="text-sm text-slate-500 font-medium mb-6">
-                        AEO = visibilidad en ChatGPT, Perplexity y Google AI. El diferenciador de 2026.
+                        AEO = visibilidad en ChatGPT, Gemini y Claude. El diferenciador de 2026.
                       </p>
                       <div className="grid grid-cols-1 gap-4">
                         {Object.entries(SEO_TIER).map(([key, val]) => (
@@ -327,6 +327,15 @@ export default function CreatorsForum() {
                     </div>
                   )}
                 </div>
+                {form.service && (
+                  <div className="lg:hidden mt-6 p-4 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-between gap-4">
+                    <div>
+                      <span className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest block">Inversión Estimada</span>
+                      <span className="text-xl font-black text-indigo-700">${priceLow.toLocaleString()} USD</span>
+                    </div>
+                    <span className="text-[9px] font-mono font-bold text-slate-400 text-right">Rango mín.</span>
+                  </div>
+                )}
 
                 {/* Navigation */}
                 <div className="flex items-center justify-between mt-10">
@@ -430,7 +439,7 @@ export default function CreatorsForum() {
           </div>
 
           {/* ── Sidebar: Live summary ── */}
-          <div className="lg:col-span-1 sticky top-24">
+          <div className="lg:col-span-1 lg:sticky lg:top-24 relative">
             <div className="bg-slate-950 rounded-[2rem] p-8 text-white">
               <p className="text-xs font-mono font-bold text-slate-500 uppercase tracking-widest mb-6">Resumen en vivo</p>
 

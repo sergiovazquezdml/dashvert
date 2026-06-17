@@ -152,6 +152,26 @@ const PILLARS = [
       'Optimización de conversión y llamadas a la acción',
     ],
     cta: 'Ver más sobre diseño',
+    details: [
+      {
+        tag: 'UX/UI Premium',
+        title: 'Interfaces que Elevan el Valor',
+        desc: 'Diseños de alta fidelidad adaptados al comportamiento psicológico del usuario. Tipografías fluidas y transiciones fluidas de marca.',
+        metric: 'Impacto Visual < 50ms'
+      },
+      {
+        tag: 'Optimización CRO',
+        title: 'Embudo y Llamados a la Acción',
+        desc: 'Flujos lógicos para reducir el rebote e incentivar el registro. Diseño heurístico enfocado en maximizar los leads o ventas de la página.',
+        metric: 'Conversión +20% a +40%'
+      },
+      {
+        tag: 'Analítica Avanzada',
+        title: 'Mapas de Calor y Grabaciones',
+        desc: 'Integración precisa con GA4 y plataformas de monitoreo como Hotjar o Clarity para auditar la interacción real y eliminar cuellos de botella.',
+        metric: 'Scroll Útil > 70%'
+      }
+    ]
   },
   {
     num: '02',
@@ -170,6 +190,26 @@ const PILLARS = [
       'Eliminación de código legacy y dependencias',
     ],
     cta: 'Ver más sobre rendimiento',
+    details: [
+      {
+        tag: 'Core Web Vitals',
+        title: 'Métricas de Carga Reales',
+        desc: 'Optimización exhaustiva del Largest Contentful Paint (LCP), Cumulative Layout Shift (CLS) e Interaction to Next Paint (INP) para móviles.',
+        metric: 'LCP < 2.5s / CLS < 0.1'
+      },
+      {
+        tag: 'Limpieza de Código',
+        title: 'Minificación & Carga Diferida',
+        desc: 'Compresión inteligente de imágenes (AVIF/WebP), eliminación de CSS/JS innecesario y diferido de scripts para aligerar la carga inicial.',
+        metric: 'PageSpeed Score > 90'
+      },
+      {
+        tag: 'Infraestructura',
+        title: 'Edge Hosting y CDN Global',
+        desc: 'Despliegue perimetral en plataformas ultrarápidas como Vercel y Cloudflare, garantizando latencias reducidas en toda Latinoamérica.',
+        metric: 'TTFB < 100ms'
+      }
+    ]
   },
   {
     num: '03',
@@ -183,11 +223,31 @@ const PILLARS = [
     title: 'Visibilidad Omnipresente (SEO + AEO)',
     desc: 'Optimización para búsquedas de Google tradicionales y respuestas de ChatGPT.',
     features: [
-      'Optimización para ChatGPT, Perplexity y Gemini',
+      'Optimización para ChatGPT, Gemini y Claude',
       'SEO técnico completo y Schema Markup',
       'Monitoreo mensual de posicionamiento',
     ],
     cta: 'Ver más sobre SEO/AEO',
+    details: [
+      {
+        tag: 'SEO Técnico',
+        title: 'Rastreo e Indexación Correcta',
+        desc: 'Jerarquía semántica óptima de encabezados, configuración avanzada de meta-etiquetas, mapa de sitio XML limpio y redirecciones consistentes.',
+        metric: 'Indexación al 100%'
+      },
+      {
+        tag: 'Schema Markup',
+        title: 'Datos Estructurados Ricos',
+        desc: 'Despliegue de esquemas JSON-LD (Organization, LocalBusiness, FAQPage) para generar fragmentos interactivos atractivos en buscadores.',
+        metric: '0 Errores en validador'
+      },
+      {
+        tag: 'Optimización AEO',
+        title: 'Visibilidad en Asistentes IA',
+        desc: 'Estructuración sintáctica adaptada para LLMs, garantizando que los crawlers oficiales de ChatGPT, Gemini y Claude citen tu web en sus respuestas.',
+        metric: 'Mención y enlace directo'
+      }
+    ]
   },
 ]
 
@@ -199,7 +259,7 @@ const FAQS = [
   },
   {
     q: '¿Qué es el AEO y por qué importa?',
-    a: 'AEO (Answer Engine Optimization) estructura tu contenido para que ChatGPT y Perplexity te recomienden en sus respuestas.'
+    a: 'AEO (Answer Engine Optimization) estructura técnicamente tu contenido para que asistentes como ChatGPT, Gemini y Claude te recomienden y citen como respuesta ideal.'
   },
   {
     q: '¿Trabajan con cualquier tecnología?',
@@ -245,7 +305,7 @@ export default function HubWorkspace() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="tag mb-4 text-rose-500 dark:text-rose-400">El problema real</span>
-            <h2 className="hub-title text-[clamp(2.5rem,4.5vw,4.5rem)] font-black leading-tight tracking-tighter mb-4 text-slate-900 dark:text-white">
+            <h2 className="hub-title text-[clamp(2rem,4.5vw,4.5rem)] font-black leading-tight tracking-tighter mb-4 text-slate-900 dark:text-white">
               ¿Cuántos clientes estás perdiendo por esto?
             </h2>
             <p className="text-lg text-slate-500 dark:text-slate-400 font-medium">
@@ -275,7 +335,7 @@ export default function HubWorkspace() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="tag mb-4 text-indigo-400">Nuestros servicios</span>
-            <h2 className="text-[clamp(2.5rem,4.5vw,4.5rem)] font-black leading-tight tracking-tighter mb-4 text-white">
+            <h2 className="text-[clamp(2rem,4.5vw,4.5rem)] font-black leading-tight tracking-tighter mb-4 text-white">
               La trinidad que la mayoría de agencias no puede ofrecer
             </h2>
             <p className="text-lg text-slate-400 font-medium">
@@ -331,6 +391,28 @@ export default function HubWorkspace() {
                   ))}
                 </div>
               </div>
+
+              {/* Detailed Technical Sub-modules Grid */}
+              {pillar.details && (
+                <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in-slide">
+                  {pillar.details.map((item, index) => (
+                    <div
+                      key={index}
+                      className="p-6 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm flex flex-col justify-between hover:border-indigo-500/30 transition-all duration-300"
+                    >
+                      <div>
+                        <span className="text-[9px] font-mono font-bold text-indigo-400 uppercase tracking-widest block mb-2">{item.tag}</span>
+                        <h4 className="text-lg font-bold text-white mb-2">{item.title}</h4>
+                        <p className="text-xs text-slate-300 leading-relaxed font-medium mb-6">{item.desc}</p>
+                      </div>
+                      <div className="pt-4 border-t border-white/5 flex items-center justify-between">
+                        <span className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest">Estándar / Meta</span>
+                        <span className="text-[10px] font-mono font-bold text-emerald-400">{item.metric}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -347,12 +429,12 @@ export default function HubWorkspace() {
                   <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
                   <span className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-widest">El diferenciador 2026</span>
                 </div>
-                <h2 className="text-[clamp(2.5rem,4vw,4rem)] font-black text-white tracking-tighter mb-6 leading-[0.95]">
+                <h2 className="text-[clamp(2rem,4vw,4rem)] font-black text-white tracking-tighter mb-6 leading-[0.95]">
                   En 2026, tu cliente busca en Google
                   <span className="text-indigo-300"> Y le pregunta a ChatGPT.</span>
                 </h2>
                 <p className="text-xl text-slate-300 font-medium mb-8 leading-relaxed">
-                  ¿Apareces en ambos? El AEO (Answer Engine Optimization) estructura tu contenido para que ChatGPT y Perplexity te recomienden directamente en sus respuestas.
+                  ¿Apareces en ambos? El AEO (Answer Engine Optimization) optimiza y estructura técnicamente tu contenido para que motores y asistentes de IA como ChatGPT, Gemini y Claude recomienden y citen directamente a tu empresa en sus respuestas.
                 </p>
                 <a href="#diagnostico" className="btn-primary">
                   Quiero aparecer en los resultados de IA
@@ -361,8 +443,9 @@ export default function HubWorkspace() {
 
               <div className="space-y-4">
                 {[
-                  { engine: 'ChatGPT Search', status: 'no', label: 'Sin AEO → No apareces' },
-                  { engine: 'Perplexity', status: 'no', label: 'Sin AEO → No apareces' },
+                  { engine: 'ChatGPT / SearchGPT', status: 'no', label: 'Sin AEO → No apareces' },
+                  { engine: 'Gemini (Google)', status: 'no', label: 'Sin AEO → No apareces' },
+                  { engine: 'Claude (Anthropic)', status: 'no', label: 'Sin AEO → No apareces' },
                   { engine: 'Google AI Overviews', status: 'no', label: 'Sin AEO → No apareces' },
                   { engine: 'Bing Copilot', status: 'no', label: 'Sin AEO → No apareces' },
                 ].map((item, i) => (
@@ -390,7 +473,7 @@ export default function HubWorkspace() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <span className="tag mb-4 text-indigo-600">Preguntas frecuentes</span>
-            <h2 className="text-[clamp(2.5rem,4.5vw,4rem)] font-black leading-tight tracking-tighter text-slate-900">
+            <h2 className="text-[clamp(2rem,4.5vw,4rem)] font-black leading-tight tracking-tighter text-slate-900">
               Lo que todos preguntan antes de empezar
             </h2>
           </div>

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { Link } from 'react-router-dom'
 import DiagnosisForm from './DiagnosisForm'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -70,9 +71,9 @@ export default function Footer() {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
           <div className="col-span-2">
-            <span className="font-sans font-black text-[22px] tracking-[-0.04em] text-slate-900 leading-none select-none block mb-5 lowercase">
+            <Link to="/" className="font-sans font-black text-[22px] tracking-[-0.04em] text-slate-900 leading-none select-none block mb-5 lowercase">
               dash<span className="text-violet-600">vert</span>
-            </span>
+            </Link>
             <p className="text-xs font-bold text-slate-600 leading-relaxed max-w-xs">
               Agencia de diseño web que convierte. Diseño de alto impacto + CRO + velocidad + SEO + AEO.
             </p>
@@ -81,15 +82,39 @@ export default function Footer() {
             </a>
           </div>
           {[
-            { title: 'Servicios', links: ['Diseño Visual', 'Velocidad & Core Web Vitals', 'SEO + AEO', 'Calculadora'] },
-            { title: 'Legal', links: ['Privacidad', 'Términos', 'Política de cookies'] },
+            { 
+              title: 'Servicios', 
+              links: [
+                { label: 'Servicios', href: '/#servicios', isAnchor: true },
+                { label: 'Proceso', href: '/#proceso', isAnchor: true },
+                { label: 'Calculadora', href: '/#calculadora', isAnchor: true }
+              ] 
+            },
+            { 
+              title: 'Explorar', 
+              links: [
+                { label: 'Sobre nosotros', href: '/about' },
+                { label: 'Comunidad', href: '/community' }
+              ] 
+            },
+            { 
+              title: 'Legal', 
+              links: [
+                { label: 'Privacidad', href: '#' },
+                { label: 'Términos', href: '#' }
+              ] 
+            },
           ].map(col => (
             <div key={col.title}>
               <p className="text-xs font-mono font-extrabold uppercase tracking-widest text-slate-500 mb-4">{col.title}</p>
               <ul className="space-y-2.5 list-none">
                 {col.links.map(l => (
-                  <li key={l}>
-                    <a href="#" className="text-xs text-slate-600 hover:text-slate-900 font-bold transition-colors">{l}</a>
+                  <li key={l.label}>
+                    {l.isAnchor ? (
+                      <a href={l.href} className="text-xs text-slate-600 hover:text-slate-900 font-bold transition-colors">{l.label}</a>
+                    ) : (
+                      <Link to={l.href} className="text-xs text-slate-600 hover:text-slate-900 font-bold transition-colors">{l.label}</Link>
+                    )}
                   </li>
                 ))}
               </ul>
